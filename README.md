@@ -25,4 +25,4 @@ demos/
 │   ├── index.html    # Required entry point
 │   ├── styles.css    # Optional assets
 │   └── script.js     # Optional assets
-```
+```  
