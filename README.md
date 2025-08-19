@@ -2,7 +2,7 @@
 
 A web framework for hosting checkout page simulations.
 
-**🌐 Live @**: https://logantucker25.github.io/checkout-library/
+**🌐** : https://logantucker25.github.io/checkout-library/
 
 ## Quick Start
 

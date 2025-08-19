@@ -116,7 +116,7 @@ function generateIndexPage(demoStatuses) {
         }
         
         .stats {
-            text-align: right;
+            text-align: center;
             margin-bottom: 2rem;
             font-size: 0.8rem;
             color: #7f8c8d;
