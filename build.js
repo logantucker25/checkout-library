@@ -116,31 +116,10 @@ function generateIndexPage(demoStatuses) {
         }
         
         .stats {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .stat {
-            text-align: center;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 12px;
-            min-width: 120px;
-        }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
+            text-align: right;
+            margin-bottom: 2rem;
+            font-size: 0.8rem;
             color: #7f8c8d;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         
         .demos-section {
@@ -152,15 +131,12 @@ function generateIndexPage(demoStatuses) {
             color: #2c3e50;
             margin-bottom: 1.5rem;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
         
         .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
         
         .demo-card {
@@ -205,13 +181,6 @@ function generateIndexPage(demoStatuses) {
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: #2c3e50;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .demo-status {
-            font-size: 1.2rem;
         }
         
         .demo-path {
@@ -261,9 +230,7 @@ function generateIndexPage(demoStatuses) {
             }
             
             .stats {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: center;
+                text-align: center;
             }
             
             .demo-grid {
@@ -277,31 +244,16 @@ function generateIndexPage(demoStatuses) {
         <h1>Checkout Demo Library</h1>
         
         <div class="stats">
-            <div class="stat">
-                <div class="stat-number">${workingDemos.length}</div>
-                <div class="stat-label">Working</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">${brokenDemos.length}</div>
-                <div class="stat-label">Broken</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">${demoStatuses.length}</div>
-                <div class="stat-label">Total</div>
-            </div>
+            ${demoStatuses.length} total • ${workingDemos.length} working • ${brokenDemos.length} broken
         </div>
         
         ${workingDemos.length > 0 ? `
         <div class="demos-section">
-            <h2 class="section-title">
-                <span class="demo-status">✅</span>
-                Working Demos
-            </h2>
+            <h2 class="section-title">Working Demos</h2>
             <div class="demo-grid">
                 ${workingDemos.map(demo => `
                 <a href="${demo.path}" class="demo-card">
                     <div class="demo-name">
-                        <span class="demo-status">✅</span>
                         ${demo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                     </div>
                     <div class="demo-path">${demo.path}</div>
@@ -313,15 +265,11 @@ function generateIndexPage(demoStatuses) {
         
         ${brokenDemos.length > 0 ? `
         <div class="demos-section">
-            <h2 class="section-title">
-                <span class="demo-status">❌</span>
-                Broken Demos
-            </h2>
+            <h2 class="section-title">Broken Demos</h2>
             <div class="demo-grid">
                 ${brokenDemos.map(demo => `
                 <div class="demo-card broken">
                     <div class="demo-name">
-                        <span class="demo-status">❌</span>
                         ${demo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                     </div>
                     <div class="demo-path">${demo.path}</div>
