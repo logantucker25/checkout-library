@@ -3,15 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo 002 - Minimal Checkout</title>
+    <title>Demo 002 - Premium Checkout</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .checkout-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: #333;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+        .order-summary {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        .form-section {
+            padding: 1rem;
+        }
+        h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #333;
+        }
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Minimal Checkout Demo</h1>
-    <p>This is a minimal demo with just basic HTML structure.</p>
-    <form>
-        <input type="text" placeholder="Name">
-        <input type="email" placeholder="Email">
-        <button>Submit</button>
-    </form>
+    <div class="checkout-container">
+        <div class="header">
+            <h1>Premium Checkout Experience</h1>
+            <p>Secure & Fast Payment Processing</p>
+        </div>
+        <div class="content">
+            <div class="form-section">
+                <h2>Payment Information</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="card">Card Number</label>
+                        <input type="text" id="card" name="card" placeholder="1234 5678 9012 3456" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="expiry">Expiry</label>
+                            <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" name="cvv" placeholder="123" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Cardholder Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Complete Secure Payment</button>
+                </form>
+            </div>
+            <div class="order-summary">
+                <h2>Order Summary</h2>
+                <div class="order-item">
+                    <span>Premium Plan (1 year)</span>
+                    <span>$99.00</span>
+                </div>
+                <div class="order-item">
+                    <span>Tax</span>
+                    <span>$8.91</span>
+                </div>
+                <div class="order-item">
+                    <span>Processing Fee</span>
+                    <span>$2.50</span>
+                </div>
+                <div class="order-item total">
+                    <span>Total</span>
+                    <span>$110.41</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

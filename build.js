@@ -1,213 +1,389 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const fs = require('fs');
+const path = require('path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const DEMOS_DIR = path.join(__dirname, 'demos');
-const INDEX_FILE = path.join(__dirname, 'index.html');
-
-async function scanDemosDirectory() {
-    try {
-        const entries = await fs.readdir(DEMOS_DIR, { withFileTypes: true });
-        return entries
-            .filter(entry => entry.isDirectory())
-            .map(entry => entry.name);
-    } catch (error) {
-        console.log('No demos directory found, creating one...');
-        await fs.mkdir(DEMOS_DIR, { recursive: true });
-        return [];
-    }
+function scanDemosDirectory() {
+  const demosPath = path.join(__dirname, 'demos');
+  
+  if (!fs.existsSync(demosPath)) {
+    console.log('Creating demos directory...');
+    fs.mkdirSync(demosPath, { recursive: true });
+    return [];
+  }
+  
+  try {
+    return fs.readdirSync(demosPath, { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name);
+  } catch (error) {
+    console.error('Error reading demos directory:', error);
+    return [];
+  }
 }
 
-async function validateDemo(demoName) {
-    const demoPath = path.join(DEMOS_DIR, demoName);
-    const indexPath = path.join(demoPath, 'index.html');
+function validateDemo(demoName) {
+  const demoPath = path.join(__dirname, 'demos', demoName);
+  const indexPath = path.join(demoPath, 'index.html');
+  
+  const result = {
+    name: demoName,
+    path: `./demos/${demoName}/`,
+    status: 'broken',
+    error: null
+  };
+  
+  try {
+    if (!fs.existsSync(indexPath)) {
+      result.error = 'Missing index.html';
+      return result;
+    }
     
-    try {
-        const stats = await fs.stat(indexPath);
-        if (!stats.isFile()) {
-            return {
-                name: demoName,
-                path: `./demos/${demoName}/`,
-                status: 'broken',
-                error: 'index.html is not a file'
-            };
-        }
-        
-        const content = await fs.readFile(indexPath, 'utf8');
-        
-        const hasHtmlTag = /<html/i.test(content);
-        const hasBodyTag = /<body/i.test(content);
-        const hasClosingTags = /<\/html>/i.test(content);
-        
-        if (hasHtmlTag || hasBodyTag || hasClosingTags) {
-            return {
-                name: demoName,
-                path: `./demos/${demoName}/`,
-                status: 'working',
-                error: null
-            };
-        } else {
-            return {
-                name: demoName,
-                path: `./demos/${demoName}/`,
-                status: 'broken',
-                error: 'Missing basic HTML structure'
-            };
-        }
-    } catch (error) {
-        return {
-            name: demoName,
-            path: `./demos/${demoName}/`,
-            status: 'broken',
-            error: error.message || 'Missing index.html'
-        };
+    const content = fs.readFileSync(indexPath, 'utf8');
+    
+    if (content.trim().length === 0) {
+      result.error = 'Empty index.html';
+      return result;
     }
-}
-
-async function validateDemos(demoNames) {
-    const validationPromises = demoNames.map(name => validateDemo(name));
-    return Promise.all(validationPromises);
+    
+    if (!content.toLowerCase().includes('<html') && !content.toLowerCase().includes('<!doctype')) {
+      result.error = 'Invalid HTML structure';
+      return result;
+    }
+    
+    result.status = 'working';
+    result.error = null;
+    
+  } catch (error) {
+    result.error = error.message;
+  }
+  
+  return result;
 }
 
 function generateIndexPage(demoStatuses) {
-    const demoListItems = demoStatuses
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map(demo => {
-            const statusIcon = demo.status === 'working' ? '✅' : '❌';
-            const errorInfo = demo.error ? ` (${demo.error})` : '';
-            const displayName = demo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            
-            return `        <li>
-            <a href="${demo.path}">${displayName}</a> ${statusIcon}${errorInfo}
-        </li>`;
-        })
-        .join('\n');
-
-    const html = `<!DOCTYPE html>
+  const workingDemos = demoStatuses.filter(demo => demo.status === 'working');
+  const brokenDemos = demoStatuses.filter(demo => demo.status === 'broken');
+  
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout Demo Library</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+        
+        .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
         }
+        
         h1 {
+            text-align: center;
             color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            background: white;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        li:hover {
-            transform: translateX(5px);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-        }
-        a {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .stats {
-            margin-top: 30px;
-            padding: 15px;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .stats p {
-            margin: 5px 0;
-        }
-        .generated {
+        
+        .subtitle {
             text-align: center;
             color: #7f8c8d;
-            font-size: 0.9em;
-            margin-top: 30px;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            min-width: 120px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .demos-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .demo-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+        
+        .demo-card.broken {
+            opacity: 0.7;
+            background: #f8f9fa;
+        }
+        
+        .demo-card.broken::before {
+            background: #e74c3c;
+        }
+        
+        .demo-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .demo-status {
+            font-size: 1.2rem;
+        }
+        
+        .demo-path {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-family: 'Monaco', 'Menlo', monospace;
+            background: #f8f9fa;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-error {
+            font-size: 0.8rem;
+            color: #e74c3c;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #7f8c8d;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ecf0f1;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 2rem 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Checkout Demo Library</h1>
-    
-    ${demoStatuses.length === 0 ? '<p>No demos found. Add demos to the /demos directory.</p>' : ''}
-    
-    <ul>
-${demoListItems}
-    </ul>
-    
-    <div class="stats">
-        <p><strong>Total Demos:</strong> ${demoStatuses.length}</p>
-        <p><strong>Working:</strong> ${demoStatuses.filter(d => d.status === 'working').length} ✅</p>
-        <p><strong>Broken:</strong> ${demoStatuses.filter(d => d.status === 'broken').length} ❌</p>
+    <div class="container">
+        <h1>Checkout Demo Library</h1>
+        <p class="subtitle">A collection of AI-generated checkout page simulations</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">${workingDemos.length}</div>
+                <div class="stat-label">Working</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">${brokenDemos.length}</div>
+                <div class="stat-label">Broken</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">${demoStatuses.length}</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+        
+        ${workingDemos.length > 0 ? `
+        <div class="demos-section">
+            <h2 class="section-title">
+                <span class="demo-status">✅</span>
+                Working Demos
+            </h2>
+            <div class="demo-grid">
+                ${workingDemos.map(demo => `
+                <a href="${demo.path}" class="demo-card">
+                    <div class="demo-name">
+                        <span class="demo-status">✅</span>
+                        ${demo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </div>
+                    <div class="demo-path">${demo.path}</div>
+                </a>
+                `).join('')}
+            </div>
+        </div>
+        ` : ''}
+        
+        ${brokenDemos.length > 0 ? `
+        <div class="demos-section">
+            <h2 class="section-title">
+                <span class="demo-status">❌</span>
+                Broken Demos
+            </h2>
+            <div class="demo-grid">
+                ${brokenDemos.map(demo => `
+                <div class="demo-card broken">
+                    <div class="demo-name">
+                        <span class="demo-status">❌</span>
+                        ${demo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </div>
+                    <div class="demo-path">${demo.path}</div>
+                    ${demo.error ? `<div class="demo-error">Error: ${demo.error}</div>` : ''}
+                </div>
+                `).join('')}
+            </div>
+        </div>
+        ` : ''}
+        
+        ${demoStatuses.length === 0 ? `
+        <div class="empty-state">
+            <h3>No Demos Found</h3>
+            <p>Add demos to the <code>/demos</code> directory to get started!</p>
+            <p>Each demo should have an <code>index.html</code> file as its entry point.</p>
+        </div>
+        ` : ''}
+        
+        <div class="footer">
+            <p>Add new demos by creating folders in <code>/demos</code> with an <code>index.html</code> file</p>
+        </div>
     </div>
-    
-    <p class="generated">Generated on ${new Date().toLocaleString()}</p>
 </body>
 </html>`;
-
-    return html;
 }
 
-async function writeIndexFile(content) {
-    await fs.writeFile(INDEX_FILE, content, 'utf8');
+function buildIndex() {
+  console.log('🔍 Scanning for demos...');
+  const demos = scanDemosDirectory();
+  console.log(`📁 Found ${demos.length} demo directories`);
+  
+  console.log('✅ Validating demos...');
+  const demoStatuses = demos.map(validateDemo);
+  
+  const workingCount = demoStatuses.filter(d => d.status === 'working').length;
+  const brokenCount = demoStatuses.filter(d => d.status === 'broken').length;
+  
+  console.log(`✅ ${workingCount} working demos`);
+  console.log(`❌ ${brokenCount} broken demos`);
+  
+  if (brokenCount > 0) {
+    console.log('\nBroken demos:');
+    demoStatuses
+      .filter(d => d.status === 'broken')
+      .forEach(demo => console.log(`  - ${demo.name}: ${demo.error}`));
+  }
+  
+  console.log('📝 Generating index page...');
+  const indexHTML = generateIndexPage(demoStatuses);
+  
+  try {
+    fs.writeFileSync(path.join(__dirname, 'index.html'), indexHTML);
+    console.log('🎉 Index page generated successfully!');
+  } catch (error) {
+    console.error('❌ Error writing index.html:', error);
+    process.exit(1);
+  }
 }
 
-async function buildIndex() {
-    console.log('🚀 Starting build process...');
-    
-    try {
-        console.log('📁 Scanning demos directory...');
-        const demos = await scanDemosDirectory();
-        console.log(`Found ${demos.length} demo(s)`);
-        
-        console.log('🔍 Validating demos...');
-        const demoStatuses = await validateDemos(demos);
-        
-        const workingCount = demoStatuses.filter(d => d.status === 'working').length;
-        const brokenCount = demoStatuses.filter(d => d.status === 'broken').length;
-        console.log(`✅ Working: ${workingCount}, ❌ Broken: ${brokenCount}`);
-        
-        console.log('📝 Generating index page...');
-        const indexHTML = generateIndexPage(demoStatuses);
-        
-        console.log('💾 Writing index.html...');
-        await writeIndexFile(indexHTML);
-        
-        console.log('✨ Build complete!');
-        console.log(`Index page generated at: ${INDEX_FILE}`);
-    } catch (error) {
-        console.error('❌ Build failed:', error);
-        console.log('Generating fallback index page...');
-        
-        const fallbackHTML = generateIndexPage([]);
-        await writeIndexFile(fallbackHTML);
-        
-        console.log('Fallback index page created');
-        process.exit(1);
-    }
+if (require.main === module) {
+  buildIndex();
 }
 
-buildIndex();
+module.exports = { buildIndex, scanDemosDirectory, validateDemo, generateIndexPage };
