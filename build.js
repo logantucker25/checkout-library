@@ -275,7 +275,6 @@ function generateIndexPage(demoStatuses) {
 <body>
     <div class="container">
         <h1>Checkout Demo Library</h1>
-        <p class="subtitle">A collection of AI-generated checkout page simulations</p>
         
         <div class="stats">
             <div class="stat">
@@ -342,7 +341,6 @@ function generateIndexPage(demoStatuses) {
         ` : ''}
         
         <div class="footer">
-            <p>Add new demos by creating folders in <code>/demos</code> with an <code>index.html</code> file</p>
         </div>
     </div>
 </body>
