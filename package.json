@@ -1,0 +1,13 @@
+{
+  "name": "checkout-demo-library",
+  "version": "1.0.0",
+  "description": "Automatic hosting framework for AI-generated checkout page simulations",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "keywords": ["checkout", "demos", "library"],
+  "author": "",
+  "license": "MIT",
+  "type": "module"
+}
