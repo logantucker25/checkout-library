@@ -1,6 +1,8 @@
 # Checkout Demo Library
 
-A web framework for hosting AI-generated checkout page simulations.
+A web framework for hosting checkout page simulations.
+
+**🌐 Live @**: https://logantucker25.github.io/checkout-library/
 
 ## Quick Start
 
@@ -15,7 +17,7 @@ npm run build    # Generate index page
 npm run dev      # Build and serve locally
 ```
 
-## Demo Structure
+## Adding to the library use demo structure
 
 ```
 demos/
@@ -24,5 +26,3 @@ demos/
 │   ├── styles.css    # Optional assets
 │   └── script.js     # Optional assets
 ```
-
-That's it! The system automatically detects, validates, and hosts all demos.
