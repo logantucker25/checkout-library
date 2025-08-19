@@ -27,9 +27,7 @@ jobs:
           node-version: '20'
           
       - name: Build index page
-        run: |
-          cd checkout-library
-          npm run build
+        run: npm run build
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -37,7 +35,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './checkout-library'
+          path: './'
           
   deploy:
     environment:
