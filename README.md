@@ -17,7 +17,7 @@ npm run build    # Generate index page
 npm run dev      # Build and serve locally
 ```
 
-## Adding to the library use demo structure
+## Demo Structure
 
 ```
 demos/
@@ -25,4 +25,21 @@ demos/
 │   ├── index.html    # Required entry point
 │   ├── styles.css    # Optional assets
 │   └── script.js     # Optional assets
-```  
+```
+
+## AI Generation Prompt pair
+
+Add this text to any AI prompt to ensure generated checkout pages work with this library:
+
+```
+Create a complete checkout page demo as a folder structure. Requirements:
+- Create a folder named after the demo (use kebab-case like "modern-checkout" or "simple-payment")
+- Include an index.html file as the main entry point with complete HTML structure
+- All CSS should be inline in <style> tags or in separate .css files
+- All JavaScript should be inline in <script> tags or in separate .js files  
+- Use relative paths for any assets (images, fonts, etc.)
+- Make it a complete, self-contained demo that works when opened directly
+- Include proper DOCTYPE, html, head, and body tags
+- No external CDN dependencies - keep everything local
+- The demo should be functional as a static HTML page
+```
