@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beachy Hotel Checkout</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #87CEEB, #00CED1);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        #checkout-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #008080;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #008080;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #FF8E8E;
+        }
+        .error {
+            color: #FF6B6B;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="checkout-container">
+        <h1>Beachy Hotel Checkout</h1>
+        <div id="checkout-steps">
+            <div id="step1" class="step active">
+                <h2>Personal Information</h2>
+                <form id="personal-info-form">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                    
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    
+                    <button type="button" onclick="nextStep(1)">Next</button>
+                </form>
+            </div>
+            
+            <div id="step2" class="step">
+                <h2>Payment Information</h2>
+                <form id="payment-info-form">
+                    <label for="card-number">Card Number:</label>
+                    <input type="text" id="card-number" name="card-number" required>
+                    
+                    <label for="card-name">Name on Card:</label>
+                    <input type="text" id="card-name" name="card-name" required>
+                    
+                    <label for="expiration-month">Expiration Month:</label>
+                    <select id="expiration-month" name="expiration-month" required>
+                        <option value="">Select Month</option>
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    
+                    <label for="expiration-year">Expiration Year:</label>
+                    <select id="expiration-year" name="expiration-year" required>
+                        <option value="">Select Year</option>
+                    </select>
+                    
+                    <label for="cvc">CVC:</label>
+                    <input type="text" id="cvc" name="cvc" required maxlength="4">
+                    
+                    <button type="button" onclick="prevStep(2)">Previous</button>
+                    <button type="button" onclick="nextStep(2)">Next</button>
+                </form>
+            </div>
+            
+            <div id="step3" class="step">
+                <h2>Billing Address</h2>
+                <form id="billing-address-form">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" required>
+                    
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city" required>
+                    
+                    <label for="state">State/Province:</label>
+                    <input type="text" id="state" name="state" required>
+                    
+                    <label for="zip">ZIP/Postal Code:</label>
+                    <input type="text" id="zip" name="zip" required>
+                    
+                    <label for="country">Country:</label>
+                    <select id="country" name="country" required>
+                        <option value="">Select Country</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="UK">United Kingdom</option>
+                        <!-- Add more countries as needed -->
+                    </select>
+                    
+                    <button type="button" onclick="prevStep(3)">Previous</button>
+                    <button type="button" onclick="submitCheckout()">Complete Checkout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Populate expiration year dropdown
+        const currentYear = new Date().getFullYear();
+        const expirationYear = document.getElementById('expiration-year');
+        for (let i = 0; i < 20; i++) {
+            const year = currentYear + i;
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            expirationYear.appendChild(option);
+        }
+
+        function nextStep(currentStep) {
+            if (validateStep(currentStep)) {
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                document.getElementById(`step${currentStep + 1}`).classList.add('active');
+            }
+        }
+
+        function prevStep(currentStep) {
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`step${currentStep - 1}`).classList.add('active');
+        }
+
+        function validateStep(step) {
+            const form = document.getElementById(`step${step}`).querySelector('form');
+            const inputs = form.querySelectorAll('input, select');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    isValid = false;
+                    showError(input);
+                } else {
+                    clearError(input);
+                }
+            });
+
+            return isValid;
+        }
+
+        function showError(input) {
+            const errorElement = input.nextElementSibling;
+            if (errorElement && errorElement.classList.contains('error')) {
+                errorElement.textContent = input.validationMessage;
+            } else {
+                const error = document.createElement('div');
+                error.className = 'error';
+                error.textContent = input.validationMessage;
+                input.parentNode.insertBefore(error, input.nextSibling);
+            }
+        }
+
+        function clearError(input) {
+            const errorElement = input.nextElementSibling;
+            if (errorElement && errorElement.classList.contains('error')) {
+                errorElement.remove();
+            }
+        }
+
+        function submitCheckout() {
+            if (validateStep(3)) {
+                // Simulate successful checkout
+                const checkoutContainer = document.getElementById('checkout-container');
+                checkoutContainer.innerHTML = `
+                    <h1>Checkout Successful!</h1>
+                    <p>Thank you for your reservation at our Beachy Hotel. We look forward to welcoming you!</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
