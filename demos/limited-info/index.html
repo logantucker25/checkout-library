@@ -156,5 +156,68 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simple form validation
+            const email = document.getElementById('email').value;
+            const card = document.getElementById('card').value;
+            const expiry = document.getElementById('expiry').value;
+            const cvv = document.getElementById('cvv').value;
+            const name = document.getElementById('name').value;
+            
+            if (!email || !card || !expiry || !cvv || !name) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Show loading state
+            const button = document.querySelector('.btn-primary');
+            const originalText = button.textContent;
+            button.textContent = 'Processing...';
+            button.disabled = true;
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                // Hide the checkout form and show success message
+                document.querySelector('.checkout-container').innerHTML = `
+                    <div class="header">
+                        <h1>Payment Successful!</h1>
+                        <p>Thank you for your purchase</p>
+                    </div>
+                    <div style="padding: 3rem; text-align: center;">
+                        <div style="background: #d4edda; color: #155724; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #c3e6cb;">
+                            <h2 style="margin-bottom: 1rem; color: #155724;">Order Confirmed</h2>
+                            <p style="margin-bottom: 1rem; font-size: 1.1rem;">Your payment has been processed successfully.</p>
+                            <p style="margin-bottom: 0; font-weight: 600;">Order Total: $110.41</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 2rem; border-radius: 8px; text-align: left;">
+                            <h3 style="margin-bottom: 1rem; color: #333;">Order Details</h3>
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
+                                <span>Premium Plan (1 year)</span>
+                                <span>$99.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
+                                <span>Tax</span>
+                                <span>$8.91</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
+                                <span>Processing Fee</span>
+                                <span>$2.50</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 1rem 0 0 0; font-weight: 700; font-size: 1.2rem; border-top: 2px solid #333;">
+                                <span>Total</span>
+                                <span>$110.41</span>
+                            </div>
+                        </div>
+                        <p style="margin-top: 2rem; color: #666;">A confirmation email has been sent to your email address.</p>
+                        <button onclick="location.reload()" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1rem 2rem; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: 600; margin-top: 1rem;">Make Another Purchase</button>
+                    </div>
+                `;
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
