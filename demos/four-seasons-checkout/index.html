@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Booking - Four Seasons Hotel San Francisco</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-left svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .header-left span {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            font-weight: normal;
+            margin-left: 30px;
+        }
+
+        .contact-us {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: center;
+            padding: 40px 0;
+            background: white;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 40px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .step-number.completed {
+            background-color: #666;
+            color: white;
+        }
+
+        .step-number.active {
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+        .step-number.pending {
+            background-color: #e0e0e0;
+            color: #666;
+        }
+
+        .step-text {
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 60px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .booking-type {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-group input[type="radio"] {
+            margin: 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.phone {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 10px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 0;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            background: #f5f5f5;
+            font-size: 16px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-bottom-color: #1a1a1a;
+            background: white;
+        }
+
+        .form-input::placeholder {
+            color: #666;
+        }
+
+        .dropdown-arrow {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .payment-section {
+            margin-top: 40px;
+        }
+
+        .accepted-cards {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .accepted-cards span {
+            font-size: 12px;
+            letter-spacing: 1px;
+            margin-right: 10px;
+        }
+
+        .card-icons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .amex { background: #0070f3; }
+        .mastercard { background: #eb001b; }
+        .diners { background: #0079be; }
+        .discover { background: #ff6000; }
+        .jcb { background: #005da0; }
+        .visa { background: #1a1f71; }
+        .unionpay { background: #e21836; }
+
+        .card-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .security-badge {
+            width: 20px;
+            height: 20px;
+            background: #666;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .security-badge::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+        }
+
+        .terms-section {
+            margin-top: 40px;
+        }
+
+        .terms-title {
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .cancellation-info {
+            margin-bottom: 20px;
+        }
+
+        .learn-more {
+            color: #666;
+            text-decoration: underline;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .checkbox-group {
+            margin: 20px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 4px;
+        }
+
+        .checkbox-group label {
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .checkbox-group a {
+            color: #333;
+            text-decoration: underline;
+        }
+
+        .book-button {
+            width: 100%;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        .book-button:hover {
+            background: #333;
+        }
+
+        .book-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .booking-summary {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .hotel-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .hotel-name {
+            font-size: 20px;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+
+        .hotel-dates {
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stay-label {
+            font-style: italic;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .room-info {
+            margin-bottom: 30px;
+        }
+
+        .room-type {
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .room-details {
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .price-main {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: right;
+            margin-bottom: 5px;
+        }
+
+        .price-note {
+            font-size: 11px;
+            color: #666;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .rate-details {
+            font-size: 11px;
+            color: #666;
+            text-decoration: underline;
+            text-align: right;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .breakdown {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .breakdown-row.total {
+            font-weight: bold;
+            font-size: 16px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .daily-rates {
+            margin: 20px 0;
+        }
+
+        .daily-rates-title {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .daily-rate {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .fine-print {
+            font-size: 10px;
+            color: #666;
+            line-height: 1.4;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-page {
+            display: none;
+            text-align: center;
+            padding: 100px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 40px auto;
+            max-width: 600px;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .confirmation-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L13.09 5.26L16 4L14.91 7.26L18 6L16.91 9.26L20 8L18.91 11.26L22 10L20.91 13.26L18 12L16.91 15.26L14 14L12.91 17.26L12 14L11.09 17.26L10 14L8.91 15.26L6 12L4.91 13.26L2 10L4.09 11.26L6 8L7.09 9.26L10 6L11.09 7.26L12 4L13.09 5.26L16 4"/>
+            </svg>
+            <span>BEST RATE GUARANTEED</span>
+            <div class="header-subtitle">Book direct and get the best rate and most favourable cancellation terms, guaranteed.</div>
+        </div>
+        <a href="#" class="contact-us">CONTACT US</a>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-step">
+            <div class="step-number completed">✓</div>
+            <div class="step-text">Enhance</div>
+        </div>
+        <div class="progress-step">
+            <div class="step-number active">2</div>
+            <div class="step-text">Complete</div>
+        </div>
+        <div class="progress-step">
+            <div class="step-number pending">3</div>
+            <div class="step-text">Confirm</div>
+        </div>
+    </div>
+
+    <div class="main-container" id="checkoutForm">
+        <div class="form-section">
+            <h1 class="page-title">Complete Booking</h1>
+            
+            <form id="bookingForm">
+                <div class="section-title">CONTACT INFORMATION</div>
+                
+                <div class="booking-type">
+                    <div class="radio-group">
+                        <input type="radio" id="myself" name="bookingFor" value="myself" checked>
+                        <label for="myself">Booking for myself</label>
+                    </div>
+                    <div class="radio-group">
+                        <input type="radio" id="someone" name="bookingFor" value="someone">
+                        <label for="someone">Booking for someone else</label>
+                    </div>
+                </div>
+
+                <div class="section-title">PRIMARY GUEST*</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="firstName" name="firstName" placeholder="First Name*" required>
+                        <div class="error-message" id="firstNameError">Please enter your first name</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="lastName" name="lastName" placeholder="Last Name*" required>
+                        <div class="error-message" id="lastNameError">Please enter your last name</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="email" class="form-input" id="email" name="email" placeholder="Email*" required>
+                        <div class="error-message" id="emailError">Please enter a valid email address</div>
+                    </div>
+                    <div class="form-group phone">
+                        <select class="form-input" id="countryCode" name="countryCode">
+                            <option value="+1">+1</option>
+                            <option value="+44">+44</option>
+                            <option value="+33">+33</option>
+                            <option value="+49">+49</option>
+                            <option value="+81">+81</option>
+                        </select>
+                        <input type="tel" class="form-input" id="phone" name="phone" placeholder="Phone Number*" required>
+                        <div class="error-message" id="phoneError">Please enter your phone number</div>
+                    </div>
+                </div>
+
+                <div class="form-row single">
+                    <div class="form-group">
+                        <select class="form-input" id="country" name="country" required>
+                            <option value="">Country/Region*</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="FR">France</option>
+                            <option value="DE">Germany</option>
+                            <option value="JP">Japan</option>
+                            <option value="AU">Australia</option>
+                        </select>
+                        <span class="dropdown-arrow">▼</span>
+                        <div class="error-message" id="countryError">Please select your country</div>
+                    </div>
+                </div>
+
+                <div class="payment-section">
+                    <div class="section-title">
+                        PAYMENT INFORMATION
+                        <div class="security-badge"></div>
+                    </div>
+                    
+                    <div class="accepted-cards">
+                        <span>ACCEPTED CARDS</span>
+                        <div class="card-icons">
+                            <div class="card-icon amex">AMEX</div>
+                            <div class="card-icon mastercard">MC</div>
+                            <div class="card-icon diners">DC</div>
+                            <div class="card-icon discover">DISC</div>
+                            <div class="card-icon jcb">JCB</div>
+                            <div class="card-icon visa">VISA</div>
+                            <div class="card-icon unionpay">UP</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <input type="text" class="form-input" id="cardName" name="cardName" placeholder="Name on card*" required>
+                            <div class="error-message" id="cardNameError">Please enter the name on your card</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-input" id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000*" maxlength="19" required>
+                            <div class="error-message" id="cardNumberError">Please enter a valid card number</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-input" id="cardExpiry" name="cardExpiry" placeholder="MM/YY*" maxlength="5" required>
+                            <div class="error-message" id="cardExpiryError">Please enter expiry date</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <input type="text" class="form-input" id="cardCvc" name="cardCvc" placeholder="CVC*" maxlength="4" required>
+                            <div class="error-message" id="cardCvcError">Please enter your CVC</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <input type="text" class="form-input" id="billingAddress" name="billingAddress" placeholder="Billing Address*" required>
+                            <div class="error-message" id="billingAddressError">Please enter your billing address</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <select class="form-input" id="billingCountry" name="billingCountry" required>
+                                <option value="">Billing Country*</option>
+                                <option value="US">United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="FR">France</option>
+                                <option value="DE">Germany</option>
+                                <option value="JP">Japan</option>
+                                <option value="AU">Australia</option>
+                            </select>
+                            <span class="dropdown-arrow">▼</span>
+                            <div class="error-message" id="billingCountryError">Please select billing country</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-section">
+                    <div class="terms-title">CANCELLATION POLICY</div>
+                    <div class="cancellation-info">
+                        <p>Free Cancellation until Aug 22, 2025</p>
+                        <a href="#" class="learn-more">LEARN MORE</a>
+                    </div>
+
+                    <div class="terms-title">TERMS & CONDITIONS</div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="cancellationPolicy" name="cancellationPolicy" required>
+                        <label for="cancellationPolicy">
+                            I have read &amp; accepted the <a href="#">Cancellation Policy</a>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="communications" name="communications">
+                        <label for="communications">
+                            I consent to Four Seasons sending me electronic communications so that Four Seasons can keep me informed of upcoming promotions and exclusive offers and to conduct marketing research. You may withdraw this consent at any time by emailing guest.historian@fourseasons.com.
+                        </label>
+                    </div>
+
+                    <p style="margin-top: 20px; font-size: 14px;">
+                        By selecting "Book" I acknowledge that Four Seasons will process my personal information as set out in the Four Seasons Privacy Notice.
+                    </p>
+                </div>
+
+                <button type="submit" class="book-button" id="bookButton">
+                    🔒 BOOK
+                </button>
+            </form>
+        </div>
+
+        <div class="booking-summary">
+            <div class="hotel-logo">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L13.09 5.26L16 4L14.91 7.26L18 6L16.91 9.26L20 8L18.91 11.26L22 10L20.91 13.26L18 12L16.91 15.26L14 14L12.91 17.26L12 14L11.09 17.26L10 14L8.91 15.26L6 12L4.91 13.26L2 10L4.09 11.26L6 8L7.09 9.26L10 6L11.09 7.26L12 4"/>
+                </svg>
+            </div>
+            
+            <div class="hotel-name">Four Seasons Hotel San Francisco</div>
+            <div class="hotel-dates">AUG 25-30, 2025</div>
+            
+            <div class="stay-label">Stay</div>
+            
+            <div class="room-info">
+                <div class="room-type">SUPERIOR ROOM - ONE KING BED</div>
+                <div class="room-details">ROOM RATE<br>2 ADULTS</div>
+            </div>
+            
+            <div class="price-main">USD 2,510.00</div>
+            <div class="price-note">Taxes &amp; fees may apply</div>
+            
+            <div class="rate-details">HIDE RATE DETAILS ▲</div>
+            
+            <div class="breakdown">
+                <div class="breakdown-row">
+                    <span>Average Nightly Rate</span>
+                    <span>USD 502.00</span>
+                </div>
+                <div class="breakdown-row">
+                    <span>Taxes &amp; fees may apply</span>
+                </div>
+                
+                <div class="daily-rates">
+                    <div class="daily-rates-title">Daily Rates | 5 Nights</div>
+                    <div class="daily-rate">
+                        <span>Monday, Aug 25</span>
+                        <span>USD 560.00</span>
+                    </div>
+                    <div class="daily-rate">
+                        <span>Tuesday, Aug 26</span>
+                        <span>USD 500.00</span>
+                    </div>
+                    <div class="daily-rate">
+                        <span>Wednesday, Aug 27</span>
+                        <span>USD 525.00</span>
+                    </div>
+                    <div class="daily-rate">
+                        <span>Thursday, Aug 28</span>
+                        <span>USD 465.00</span>
+                    </div>
+                    <div class="daily-rate">
+                        <span>Friday, Aug 29</span>
+                        <span>USD 460.00</span>
+                    </div>
+                </div>
+                
+                <div class="breakdown-row">
+                    <span>California Tourism Assessment Fee (0.195% of room rate)</span>
+                    <span>USD 4.90</span>
+                </div>
+                <div class="breakdown-row">
+                    <span>San Francisco Tourism Improvement District Assessment Fee (3.5% of room rate)</span>
+                    <span>USD 87.85</span>
+                </div>
+                <div class="breakdown-row">
+                    <span>Occupancy Tax (14% of room rate)</span>
+                    <span>USD 351.40</span>
+                </div>
+                
+                <div class="breakdown-row total">
+                    <span>Est. Total*</span>
+                    <span>USD 2,954.15</span>
+                </div>
+            </div>
+            
+            <div class="fine-print">
+                **Our Concierge team will craft the best itinerary for you based on your request. Itinerary request items will not be charged until the request is confirmed.
+                <br><br>
+                *Estimated total cost of room rate, mandatory property fees (for example, resort fees or service charges), applicable package inclusions and government imposed taxes, service charges, levies and surcharges. Estimated total costs do not include airport transfers or requested amenities. Actual government imposed taxes, service charges, levies and surcharges are calculated upon check-out and are subject to change without notice. Extra person/extra bed to the rates displayed unless otherwise noted. Early departure fees may apply. Should you shorten your stay prior to arrival or during your stay, your room rate may change.
+                <br><br>
+                Price conversions to your local or preferred currency are provided for your convenience only. Due to fluctuations in exchange rates, the final prices, taxes, fees and estimated total may differ from the converted amounts. Guests will be charged in the Hotel's billing currency.
+            </div>
+        </div>
+    </div>
+
+    <div class="success-page" id="successPage">
+        <div class="success-icon">✅</div>
+        <h1 class="success-title">Booking Confirmed</h1>
+        <p class="success-message">Thank you for your reservation at Four Seasons Hotel San Francisco</p>
+        <div class="confirmation-number">Confirmation Number: <span id="confirmationNumber"></span></div>
+        <p>A confirmation email has been sent to your email address.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('bookingForm');
+            const checkoutForm = document.getElementById('checkoutForm');
+            const successPage = document.getElementById('successPage');
+            
+            // Card number formatting
+            const cardNumberInput = document.getElementById('cardNumber');
+            cardNumberInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\s/g, '');
+                let formattedValue = value.match(/.{1,4}/g)?.join(' ') || '';
+                if (formattedValue !== e.target.value) {
+                    e.target.value = formattedValue;
+                }
+            });
+
+            // Card expiry formatting
+            const cardExpiryInput = document.getElementById('cardExpiry');
+            cardExpiryInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
+            });
+
+            // Form validation
+            function validateField(fieldId, errorId, validator) {
+                const field = document.getElementById(fieldId);
+                const error = document.getElementById(errorId);
+                
+                if (!validator(field.value)) {
+                    error.style.display = 'block';
+                    field.style.borderBottomColor = '#e74c3c';
+                    return false;
+                } else {
+                    error.style.display = 'none';
+                    field.style.borderBottomColor = '#ccc';
+                    return true;
+                }
+            }
+
+            function validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function validateCardNumber(cardNumber) {
+                return cardNumber.replace(/\s/g, '').length >= 13;
+            }
+
+            function validateExpiry(expiry) {
+                if (!/^\d{2}\/\d{2}$/.test(expiry)) return false;
+                const [month, year] = expiry.split('/').map(Number);
+                const now = new Date();
+                const currentYear = now.getFullYear() % 100;
+                const currentMonth = now.getMonth() + 1;
+                
+                if (month < 1 || month > 12) return false;
+                if (year < currentYear || (year === currentYear && month < currentMonth)) return false;
+                
+                return true;
+            }
+
+            function validateCvc(cvc) {
+                return /^\d{3,4}$/.test(cvc);
+            }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                let isValid = true;
+                
+                // Validate all required fields
+                isValid &= validateField('firstName', 'firstNameError', val => val.trim().length > 0);
+                isValid &= validateField('lastName', 'lastNameError', val => val.trim().length > 0);
+                isValid &= validateField('email', 'emailError', validateEmail);
+                isValid &= validateField('phone', 'phoneError', val => val.trim().length > 0);
+                isValid &= validateField('country', 'countryError', val => val.trim().length > 0);
+                
+                isValid &= validateField('cardName', 'cardNameError', val => val.trim().length > 0);
+                isValid &= validateField('cardNumber', 'cardNumberError', validateCardNumber);
+                isValid &= validateField('cardExpiry', 'cardExpiryError', validateExpiry);
+                isValid &= validateField('cardCvc', 'cardCvcError', validateCvc);
+                isValid &= validateField('billingAddress', 'billingAddressError', val => val.trim().length > 0);
+                isValid &= validateField('billingCountry', 'billingCountryError', val => val.trim().length > 0);
+                
+                // Validate cancellation policy checkbox
+                const cancellationPolicy = document.getElementById('cancellationPolicy');
+                if (!cancellationPolicy.checked) {
+                    alert('Please accept the cancellation policy to continue.');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Generate confirmation number
+                    const confirmationNumber = 'FS' + Date.now().toString().slice(-8);
+                    document.getElementById('confirmationNumber').textContent = confirmationNumber;
+                    
+                    // Show success page
+                    checkoutForm.style.display = 'none';
+                    successPage.style.display = 'block';
+                    
+                    // Scroll to top
+                    window.scrollTo(0, 0);
+                }
+            });
+
+            // Real-time validation
+            ['firstName', 'lastName', 'email', 'phone', 'country', 'cardName', 'cardNumber', 'cardExpiry', 'cardCvc', 'billingAddress', 'billingCountry'].forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                field.addEventListener('blur', function() {
+                    const errorId = fieldId + 'Error';
+                    let validator;
+                    
+                    switch(fieldId) {
+                        case 'email':
+                            validator = validateEmail;
+                            break;
+                        case 'cardNumber':
+                            validator = validateCardNumber;
+                            break;
+                        case 'cardExpiry':
+                            validator = validateExpiry;
+                            break;
+                        case 'cardCvc':
+                            validator = validateCvc;
+                            break;
+                        default:
+                            validator = val => val.trim().length > 0;
+                    }
+                    
+                    validateField(fieldId, errorId, validator);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
