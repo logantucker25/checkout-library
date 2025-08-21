@@ -307,23 +307,146 @@
         .success-page {
             display: none;
             text-align: center;
-            padding: 3rem;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 4rem 3rem;
+            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.15);
+            border: 2px solid #d4edda;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #28a745, #20c997, #28a745);
+            animation: successGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes successGlow {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
         .success-icon {
-            width: 80px;
-            height: 80px;
-            background-color: #28a745;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #28a745, #20c997);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 2rem;
             color: white;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+            animation: successPulse 1.5s ease-in-out infinite;
+            position: relative;
+        }
+
+        .success-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(40, 167, 69, 0.2);
+            animation: successRipple 2s infinite;
+        }
+
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes successRipple {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+
+        .success-title {
+            color: #155724;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(21, 87, 36, 0.1);
+        }
+
+        .success-subtitle {
+            color: #28a745;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .success-message {
+            color: #495057;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .order-details-box {
+            background: white;
+            border: 2px solid #d4edda;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+        }
+
+        .order-number-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #28a745;
+            background: #f8fff9;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            border: 2px dashed #28a745;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .success-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .success-feature {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #d4edda;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.1);
+        }
+
+        .success-feature-icon {
             font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .success-feature h4 {
+            color: #28a745;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .success-feature p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
         }
 
         @media (max-width: 768px) {
@@ -663,11 +786,61 @@
 
             <!-- Success Page -->
             <div class="success-page" id="success-page">
-                <div class="success-icon">✓</div>
-                <h2 style="color: #28a745; margin-bottom: 1rem;">Order Completed Successfully!</h2>
-                <p style="color: #666; margin-bottom: 2rem;">Thank you for your purchase. Your order has been processed and you will receive a confirmation email shortly.</p>
-                <p style="font-weight: 600;">Order #: <span id="order-number"></span></p>
-                <button type="button" class="btn btn-primary" onclick="startOver()" style="margin-top: 2rem;">Place Another Order</button>
+                <div class="success-icon">🎉</div>
+                <h1 class="success-title">ORDER PLACED SUCCESSFULLY!</h1>
+                <div class="success-subtitle">✅ Payment Confirmed • 📦 Order Processing</div>
+                
+                <div class="success-message">
+                    <strong>Congratulations!</strong> Your order has been successfully placed and payment has been confirmed. 
+                    We're already preparing your items for shipment!
+                </div>
+
+                <div class="order-details-box">
+                    <h3 style="color: #28a745; margin-bottom: 1rem; font-size: 1.3rem;">
+                        🎯 Your Order Details
+                    </h3>
+                    <div class="order-number-display">
+                        Order #: <span id="order-number"></span>
+                    </div>
+                    <p style="color: #666; margin: 1rem 0;">
+                        📧 A confirmation email has been sent to your inbox<br>
+                        📱 You can track your order using the number above
+                    </p>
+                </div>
+
+                <div class="success-features">
+                    <div class="success-feature">
+                        <span class="success-feature-icon">✅</span>
+                        <h4>Payment Processed</h4>
+                        <p>Your payment has been successfully charged and confirmed</p>
+                    </div>
+                    <div class="success-feature">
+                        <span class="success-feature-icon">📦</span>
+                        <h4>Order Confirmed</h4>
+                        <p>Your order is now in our fulfillment center being prepared</p>
+                    </div>
+                    <div class="success-feature">
+                        <span class="success-feature-icon">🚚</span>
+                        <h4>Shipping Soon</h4>
+                        <p>You'll receive tracking information within 24-48 hours</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #d4edda;">
+                    <h3 style="color: #28a745; margin-bottom: 1rem;">What happens next?</h3>
+                    <div style="text-align: left; max-width: 400px; margin: 0 auto;">
+                        <p style="margin: 0.5rem 0; color: #666;">
+                            <strong>1.</strong> Check your email for order confirmation<br>
+                            <strong>2.</strong> We'll prepare and package your items<br>
+                            <strong>3.</strong> You'll receive tracking information<br>
+                            <strong>4.</strong> Enjoy your new purchase!
+                        </p>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="startOver()" style="margin-top: 2rem; padding: 1rem 3rem; font-size: 1.1rem; background: linear-gradient(135deg, #28a745, #20c997);">
+                    🛒 Place Another Order
+                </button>
             </div>
         </div>
 
