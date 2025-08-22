@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vila Alba Resort - Checkout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e1e5e9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .availability-banner {
+            background: #5ba8db;
+            color: white;
+            padding: 0.75rem 2rem;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .availability-banner .close {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 140px);
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            height: fit-content;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .hotel-image {
+            width: 100%;
+            height: 240px;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 240"><rect fill="%23d4a574" width="380" height="240"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-size="16" font-family="Arial">Hotel Interior</text></svg>');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .reservation-title {
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .room-details {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .pricing-section {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        .pricing-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .pricing-row.total {
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e1e5e9;
+            margin-top: 1rem;
+        }
+
+        .pricing-row.pay-now {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c5aa0;
+            margin-top: 1rem;
+        }
+
+        .non-refundable {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .non-refundable::before {
+            content: "●";
+            color: #666;
+        }
+
+        .view-details {
+            color: #2c5aa0;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .booking-details {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e1e5e9;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            margin-bottom: 120px;
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .social-btn:hover {
+            border-color: #ccc;
+            background: #f9f9f9;
+        }
+
+        .social-btn.facebook { color: #1877f2; }
+        .social-btn.google { color: #4285f4; }
+        .social-btn.apple { color: #000; }
+
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .form-row.two-cols {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .form-row.three-cols {
+            grid-template-columns: 1fr 2fr 1fr;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c5aa0;
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+
+        select {
+            background: white;
+            cursor: pointer;
+        }
+
+        .motive-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .motive-btn {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .motive-btn.active {
+            background: #2c5aa0;
+            color: white;
+            border-color: #2c5aa0;
+        }
+
+        .motive-btn:not(.active):hover {
+            border-color: #2c5aa0;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-top: 0.2rem;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: normal;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .book-btn {
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 2rem;
+            transition: background 0.2s;
+        }
+
+        .book-btn:hover:not(:disabled) {
+            background: #234a87;
+        }
+
+        .book-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .payment-section {
+            display: none;
+            margin-top: 2rem;
+            border-top: 1px solid #e1e5e9;
+            padding-top: 2rem;
+        }
+
+        .payment-method {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .payment-method.selected {
+            border-color: #2c5aa0;
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            cursor: pointer;
+            background: #f8f9fa;
+        }
+
+        .payment-header.selected {
+            background: #e7f3ff;
+        }
+
+        .payment-content {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #ddd;
+        }
+
+        .card-visual {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-logo {
+            align-self: flex-end;
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .card-number {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin: 1rem 0;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .card-holder {
+            font-size: 0.9rem;
+        }
+
+        .card-expiry {
+            font-size: 0.9rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .payment-form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+        }
+
+        .info-icon {
+            color: #2c5aa0;
+            cursor: help;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        .success-page {
+            display: none;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #28a745;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .fixed-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e1e5e9;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .popup-content {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: popupSlideIn 0.3s ease-out;
+        }
+
+        @keyframes popupSlideIn {
+            from {
+                transform: translateY(-50px) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .popup-close:hover {
+            background: #e5e5e5;
+            color: #333;
+        }
+
+        .popup-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .popup-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .popup-message {
+            font-size: 1.1rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+        }
+
+        .popup-timer {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row.two-cols,
+            .form-row.three-cols {
+                grid-template-columns: 1fr;
+            }
+            
+            .motive-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">VILA ALBA RESORT</div>
+        <div class="language">EN</div>
+    </div>
+    
+    <div class="availability-banner">
+        <span>🏨 Availability is decreasing rapidly for the dates selected. Book now!</span>
+        <button class="close" onclick="this.parentElement.style.display='none'">&times;</button>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="hotel-image">
+                <button class="back-button">←</button>
+                <div>
+                    <div class="reservation-title">Reservation Summary</div>
+                    <div class="room-details">
+                        Apartment with 2 bedrooms - non-refundable<br>
+                        Non-Refundable Rate
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pricing-section">
+                <div class="pricing-row">
+                    <span>Total stay 📊</span>
+                    <span>€1,877.78</span>
+                </div>
+                <div class="pricing-row">
+                    <span>Bed & Breakfast</span>
+                    <span>Included</span>
+                </div>
+                <div class="pricing-row">
+                    <span>Taxes</span>
+                    <span>VAT Included</span>
+                </div>
+                <div class="pricing-row total">
+                    <span>Total</span>
+                    <span>€1,877.78</span>
+                </div>
+                <div class="pricing-row pay-now">
+                    <span>Pay now</span>
+                    <span>€1,877.78</span>
+                </div>
+                
+                <div class="non-refundable">
+                    <span>Non-refundable</span>
+                    <span class="view-details">View details</span>
+                </div>
+            </div>
+            
+            <div class="booking-details">
+                <div><strong>Your Selection</strong></div>
+                <div>Mon, Aug 25 - Sun, Aug 31 (6 nights) - 1 Room, 2 Adults</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div id="form-section">
+                <div class="social-login">
+                    <button class="social-btn facebook">
+                        <span>📘</span> Continue with Facebook
+                    </button>
+                    <button class="social-btn google">
+                        <span>🔵</span> Continue with Google
+                    </button>
+                    <button class="social-btn apple">
+                        <span>🍎</span> Continue with Apple
+                    </button>
+                </div>
+
+                <div class="divider">Or login with</div>
+
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <select id="country" name="country" required>
+                            <option value="">Select your country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="ES">Spain</option>
+                            <option value="IT">Italy</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="john.doe@gmail.com" required>
+                    </div>
+
+                    <div class="form-row three-cols">
+                        <div class="form-group">
+                            <label for="countryCode">Country Code</label>
+                            <select id="countryCode" name="countryCode" required>
+                                <option value="+1">+1</option>
+                                <option value="+44">+44</option>
+                                <option value="+49">+49</option>
+                                <option value="+33">+33</option>
+                                <option value="+34">+34</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone" placeholder="123 456 789" required>
+                        </div>
+                        <div></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" placeholder="Address" required>
+                    </div>
+
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" placeholder="City" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zipCode">Zip/Post Code</label>
+                            <input type="text" id="zipCode" name="zipCode" placeholder="2345-678" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Motive of your stay</label>
+                        <div class="motive-buttons">
+                            <button type="button" class="motive-btn active" data-motive="leisure">Leisure</button>
+                            <button type="button" class="motive-btn" data-motive="bleisure">Bleisure</button>
+                            <button type="button" class="motive-btn" data-motive="business">Business</button>
+                        </div>
+                        <input type="hidden" id="motive" name="motive" value="leisure">
+                    </div>
+
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="arrivalTime">Arrival time</label>
+                            <input type="text" id="arrivalTime" name="arrivalTime" placeholder="Arrival time">
+                        </div>
+                        <div class="form-group">
+                            <label for="twitterProfile">Twitter Profile</label>
+                            <input type="text" id="twitterProfile" name="twitterProfile" placeholder="Twitter profile">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vatNumber">VAT number</label>
+                        <input type="text" id="vatNumber" name="vatNumber" placeholder="VAT number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notes and special requests</label>
+                        <textarea id="notes" name="notes" placeholder="Leave us a message"></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="offers" name="offers">
+                        <label for="offers">Please notify me of any special offers or promotions</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="privacy" name="privacy" required>
+                        <label for="privacy">Privacy and Personal Data Policy</label>
+                    </div>
+
+                </form>
+            </div>
+
+            <div id="payment-section" class="payment-section">
+                <div class="payment-method selected">
+                    <div class="payment-header selected">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" id="pay-card" name="payment-method" value="card" checked>
+                            <label for="pay-card" style="margin: 0; font-weight: normal; color: #333;">Pay with card</label>
+                        </div>
+                        <div style="font-size: 1.2rem;">●</div>
+                    </div>
+                    <div class="payment-content">
+                        <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start;">
+                            <div>
+                                <form id="payment-form">
+                                    <div class="form-group">
+                                        <label for="cardNumber">Card number</label>
+                                        <div style="position: relative;">
+                                            <input type="text" id="cardNumber" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX" required>
+                                            <span class="info-icon" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);">ℹ️</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="payment-form-row">
+                                        <div class="form-group">
+                                            <label for="expiryDate">Expiration date</label>
+                                            <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cvv">Security code</label>
+                                            <input type="text" id="cvv" name="cvv" placeholder="CVV" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="cardHolder">Card holder</label>
+                                        <input type="text" id="cardHolder" name="cardHolder" placeholder="John Doe" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-visual" style="max-width: 300px;">
+                                <div class="card-logo">BANK</div>
+                                <div class="card-number">XXXX XXXX XXXX XXXX</div>
+                                <div class="card-bottom">
+                                    <div class="card-holder">
+                                        <div style="font-size: 0.8rem; opacity: 0.8;">Name</div>
+                                        <div>XX/XX</div>
+                                    </div>
+                                    <div class="card-expiry">XX/XX</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-method">
+                    <div class="payment-header">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" id="pay-other" name="payment-method" value="other">
+                            <label for="pay-other" style="margin: 0; font-weight: normal; color: #333;">Other</label>
+                        </div>
+                        <div style="font-size: 1.2rem; color: #ddd;">○</div>
+                    </div>
+                    <div class="payment-content" style="display: none;">
+                        <p>To secure your booking, a deposit has to be done until 3 days after the reservation request. For the standard rate the payment required is 50% of the total amount. The non refundable rates require the payment of the total amount of the reservation.</p>
+                    </div>
+                </div>
+
+                <button type="button" class="book-btn" onclick="processPayment()">Book Now</button>
+            </div>
+
+            <div id="success-section" class="success-page">
+                <div class="success-icon">✓</div>
+                <h1>Booking Confirmed!</h1>
+                <p>Thank you for your reservation at Vila Alba Resort. You will receive a confirmation email shortly.</p>
+                <p><strong>Booking Reference:</strong> VA-2025-<span id="booking-ref"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="bottom-bar" class="fixed-bottom">
+        <div>
+            <strong>Total: €1,877.78</strong>
+        </div>
+        <button class="book-btn" style="width: auto; margin: 0; padding: 0.75rem 1.5rem;" onclick="handleBookNow()">
+            Book Now
+        </button>
+    </div>
+
+    <!-- Urgency Popup -->
+    <div id="urgency-popup" class="popup-overlay">
+        <div class="popup-content">
+            <button class="popup-close" onclick="closeUrgencyPopup()">&times;</button>
+            <div class="popup-icon">⏰</div>
+            <div class="popup-title">Time is Running Out!</div>
+            <div class="popup-message">
+                You only have <strong>5 minutes remaining</strong> to complete your checkout. Hurry up and secure your reservation before it expires!
+            </div>
+            <div class="popup-timer" id="popup-timer">5:00</div>
+            <div style="font-size: 0.9rem; color: #999;">
+                Other customers are also viewing this property
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Motive selection
+        document.querySelectorAll('.motive-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.motive-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('motive').value = btn.dataset.motive;
+            });
+        });
+
+        // Payment method selection
+        document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                document.querySelectorAll('.payment-method').forEach(method => {
+                    method.classList.remove('selected');
+                    method.querySelector('.payment-header').classList.remove('selected');
+                    method.querySelector('.payment-content').style.display = 'none';
+                });
+                
+                if (radio.checked) {
+                    const method = radio.closest('.payment-method');
+                    const header = radio.closest('.payment-header');
+                    method.classList.add('selected');
+                    header.classList.add('selected');
+                    method.querySelector('.payment-content').style.display = 'block';
+                }
+            });
+        });
+
+        // Card number formatting
+        document.getElementById('cardNumber').addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+            const formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            if (formattedValue !== e.target.value) {
+                e.target.value = formattedValue;
+            }
+        });
+
+        // Expiry date formatting
+        document.getElementById('expiryDate').addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        // CVV formatting
+        document.getElementById('cvv').addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+        });
+
+        // Form validation
+        function validateForm() {
+            const form = document.getElementById('booking-form');
+            const privacy = document.getElementById('privacy');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return false;
+            }
+            
+            if (!privacy.checked) {
+                alert('Please accept the Privacy and Personal Data Policy to continue.');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function validatePaymentForm() {
+            const paymentForm = document.getElementById('payment-form');
+            return paymentForm.checkValidity();
+        }
+
+        function showPayment() {
+            if (!validateForm()) return;
+            
+            document.getElementById('form-section').style.display = 'none';
+            document.getElementById('payment-section').style.display = 'block';
+            document.getElementById('bottom-bar').style.display = 'none';
+        }
+
+        function processPayment() {
+            if (!validatePaymentForm()) {
+                document.getElementById('payment-form').reportValidity();
+                return;
+            }
+            
+            // Simulate payment processing
+            const bookingRef = Math.random().toString(36).substr(2, 6).toUpperCase();
+            document.getElementById('booking-ref').textContent = bookingRef;
+            
+            document.getElementById('payment-section').style.display = 'none';
+            document.getElementById('success-section').style.display = 'block';
+        }
+
+        // Handle Book Now button based on current section
+        function handleBookNow() {
+            const formSection = document.getElementById('form-section');
+            const paymentSection = document.getElementById('payment-section');
+            
+            if (formSection.style.display !== 'none') {
+                // Currently in form section, validate and show payment
+                showPayment();
+            } else if (paymentSection.style.display !== 'none') {
+                // Currently in payment section, process payment
+                processPayment();
+            }
+        }
+
+        // Urgency popup functionality
+        let popupShown = false;
+        let countdownTimer = null;
+        let timeRemaining = 300; // 5 minutes in seconds
+
+        function showUrgencyPopup() {
+            if (popupShown) return;
+            popupShown = true;
+            
+            document.getElementById('urgency-popup').style.display = 'flex';
+            startCountdown();
+        }
+
+        function closeUrgencyPopup() {
+            document.getElementById('urgency-popup').style.display = 'none';
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+            }
+        }
+
+        function startCountdown() {
+            function updateTimer() {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById('popup-timer').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                timeRemaining--;
+                
+                if (timeRemaining < 0) {
+                    clearInterval(countdownTimer);
+                    document.getElementById('popup-timer').textContent = "TIME'S UP!";
+                    document.getElementById('popup-timer').style.color = '#dc3545';
+                }
+            }
+            
+            updateTimer();
+            countdownTimer = setInterval(updateTimer, 1000);
+        }
+
+        // Trigger popup when address field is focused
+        document.getElementById('address').addEventListener('focus', showUrgencyPopup, { once: true });
+
+        // Close popup when clicking outside
+        document.getElementById('urgency-popup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeUrgencyPopup();
+            }
+        });
+
+        // Initialize payment method display
+        document.querySelector('input[name="payment-method"][value="card"]').dispatchEvent(new Event('change'));
+    </script>
+</body>
+</html>
