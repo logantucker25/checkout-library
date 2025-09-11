@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>cosmopolitan [en] Payment Form - COS2024</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <style>/* Common baseline styles */
+:root {
+  --primary-color: #007bff;
+  --accent-color: #6c757d;
+  --border-radius: 4px;
+  --font-family: Arial, Helvetica, sans-serif;
+  --error-color: #dc3545;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+}
+
+* { box-sizing: border-box; }
+body {
+  font-family: var(--font-family);
+  background: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 700px;
+  background: #fff;
+  margin: 40px auto;
+  padding: 30px 40px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+h1 { font-size: 1.5rem; margin: 0 0 20px 0; text-align: center; color: var(--primary-color); }
+label { display: block; margin-top: 15px; font-weight: 600; }
+input, select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: var(--border-radius);
+  margin-top: 5px;
+  transition: border-color 0.2s ease;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+input.error, select.error, textarea.error {
+  border-color: var(--error-color);
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+button {
+  background: var(--primary-color);
+  border: none;
+  color: #fff;
+  padding: 12px 18px;
+  font-size: 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  margin-top: 25px;
+  width: 100%;
+  transition: opacity 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+button:hover { opacity: 0.95; }
+button:disabled {
+  background: var(--accent-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Button states for different validation strategies */
+button.ready {
+  background: var(--success-color);
+  transform: scale(1.02);
+}
+button.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Field groups and validation */
+.field-group {
+  margin-bottom: 15px;
+}
+
+/* Grouped fields container */
+.field-group-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.field-group-item {
+  flex: 1;
+  min-width: 0; /* Allow flex items to shrink below content size */
+}
+
+/* Different grouping strategies */
+.field-group-container.vertical {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field-group-container.mixed {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field-group-container.mixed .field-sub-group {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.field-group-container.mixed .field-sub-group .field-group-item {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Responsive design for grouped fields */
+@media (max-width: 768px) {
+  .field-group-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .field-group-item {
+    flex: none;
+  }
+  
+  .field-group-container.mixed .field-sub-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.field-error {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-top: 5px;
+  display: block;
+  min-height: 1.2em;
+}
+
+/* Validation messages */
+.validation-message {
+  margin-top: 15px;
+  padding: 10px 15px;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  display: none;
+  text-align: center;
+}
+.validation-message.error {
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--error-color);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+.validation-message.warning {
+  background: rgba(255, 193, 7, 0.1);
+  color: #856404;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+.validation-message.info {
+  background: rgba(23, 162, 184, 0.1);
+  color: var(--info-color);
+  border: 1px solid rgba(23, 162, 184, 0.3);
+}
+
+/* Multi-page navigation */
+.form-navigation {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+}
+.next-page, .prev-page {
+  flex: 1;
+  margin-top: 0;
+}
+.prev-page {
+  background: var(--accent-color);
+}
+.prev-page:hover {
+  background: #5a6268;
+}
+.next-page {
+  background: var(--primary-color);
+}
+.next-page:hover:not(:disabled) {
+  background: #0056b3;
+}
+.next-page:disabled,
+.next-page.disabled {
+  background: var(--accent-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Submit button in navigation context */
+.form-navigation #submit-btn {
+  flex: 2; /* Make submit button wider than back button */
+  margin-top: 0;
+  background: var(--success-color);
+}
+.form-navigation #submit-btn:hover {
+  background: #218838;
+}
+
+/* When back button is present with submit button */
+.form-navigation .prev-page + #submit-btn {
+  margin-left: 0; /* Remove any extra margins */
+}
+
+/* Signature pad */
+#signature-pad {
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius);
+  width: 100%;
+  height: 120px;
+  background: #fff;
+  cursor: crosshair;
+  touch-action: none;
+}
+#clear-sign { 
+  background: var(--error-color); 
+  margin-top: 10px;
+  width: auto;
+  padding: 8px 16px;
+}
+
+/* Agreement boxes */
+.agreement { 
+  margin-top: 20px; 
+  display: flex; 
+  align-items: flex-start;
+  gap: 8px;
+}
+.agreement input { 
+  width: auto; 
+  margin: 0;
+  flex-shrink: 0;
+}
+.agreement label {
+  margin: 0;
+  font-weight: normal;
+  line-height: 1.4;
+}
+
+/* Captcha container */
+.captcha-container { 
+  margin-top: 20px;
+  text-align: center;
+}
+.captcha-container img {
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius);
+  margin: 10px 0;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Success page */
+.success-page {
+  text-align: center;
+  padding: 40px 20px;
+}
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+.success-page h2 {
+  color: var(--success-color);
+  margin-bottom: 15px;
+}
+.success-page p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  color: #666;
+}
+.success-details {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  margin: 20px 0;
+  text-align: left;
+}
+.success-details p {
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+.new-form-btn {
+  background: var(--success-color);
+  margin-top: 20px;
+}
+
+/* Loading state */
+button:disabled {
+  position: relative;
+}
+button:disabled::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Progressive enable animation */
+button[style*="opacity"] {
+  transition: opacity 0.3s ease;
+}
+
+/* Field shake animation for validation */
+.form-field.error {
+  animation: shake 0.5s ease-in-out;
+}
+</style>
+    
+    
+    <style>:root {
+  --primary-color: #6f42c1;
+  --accent-color: #e9ecef;
+}
+
+.cosmopolitan-header {
+  background: linear-gradient(135deg, #6f42c1, #563d7c);
+  color: white;
+  padding: 20px;
+  margin: -30px -40px 30px -40px;
+  text-align: center;
+}
+
+.cosmopolitan-section {
+  background: #f8f9fa;
+  border-left: 4px solid var(--primary-color);
+  padding: 15px 20px;
+  margin: 25px 0;
+  border-radius: 4px;
+}
+
+.cosmopolitan-section h3 {
+  color: var(--primary-color);
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.amount-display {
+  background: white;
+  border: 2px solid var(--primary-color);
+  padding: 15px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  border-radius: var(--border-radius);
+  margin: 15px 0;
+}
+
+/* Make read-only inputs look like plain text */
+input[readonly],
+textarea[readonly] {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  resize: none;
+  cursor: default;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Ensure proper alignment when mixed with labels */
+input[readonly]:not([type="checkbox"]):not([type="radio"]) {
+  display: inline;
+  width: auto;
+  min-height: 0;
+}
+
+/* For number inputs, hide spinner arrows */
+input[readonly][type="number"]::-webkit-inner-spin-button,
+input[readonly][type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[readonly][type="number"] {
+  -moz-appearance: textfield;
+}
+</style>
+    
+    
+</head>
+<body>
+<div class="container">
+    
+    <div class="cosmopolitan-header">
+        <h1>THE COSMOPOLITAN</h1>
+        <p>Las Vegas Payment Portal</p>
+    </div>
+    
+
+  <form id="payment-form" method="post">
+    <div id="form-container">
+      
+        <div class="form-page" data-page="1" style="display: block;">
+          
+          
+          
+          <!-- Define field categories for all layouts -->
+          
+          
+          
+          <!-- Set up field categories for cosmopolitan -->
+          
+            
+            
+          
+           
+                                 <!-- Process fields with cosmopolitan sections -->
+           
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+                 <div class="cosmopolitan-section" id="reservation-section">
+                   <h3>Reservation Information</h3>
+                 
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <!-- Check if this field is part of another field's group -->
+                
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                
+                
+                  <!-- Single field -->
+                  <div class="field-group">
+                    <label for="confirmation_number">Confirmation number *</label>
+                    
+                    <input name="confirmation_number" id="confirmation_number" type="text" placeholder="" required readonly value="ABC123" class="form-field" />
+                    
+                    <span class="field-error" id="error-confirmation_number"></span>
+                  </div>
+                  
+                
+              
+            
+          
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <!-- Determine grouping strategy -->
+                
+                
+                
+                
+                
+                
+                <!-- Check if this is a payment group (card_number + expiry fields) -->
+                
+                
+                <!-- Check if this is a name group (first_name + last_name) -->
+                
+                
+                <!-- Check if this is an address group (address fields) -->
+                
+                
+                <!-- Check if group has more than 3 fields (default to vertical) -->
+                
+                
+                <!-- Render grouped fields with appropriate strategy -->
+                
+                  <!-- Horizontal layout: all fields on same line (default) -->
+                  <div class="field-group-container">
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="arrival_date">Arrival Date *</label>
+                            
+                            <input name="arrival_date" id="arrival_date" type="date" placeholder="" required readonly value="2025-07-13" class="form-field" />
+                            
+                            <span class="field-error" id="error-arrival_date"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="departure_date">Departure Date *</label>
+                            
+                            <input name="departure_date" id="departure_date" type="date" placeholder="" required readonly value="2025-07-15" class="form-field" />
+                            
+                            <span class="field-error" id="error-departure_date"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                  </div>
+                
+              
+            
+          
+             
+          
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <!-- Determine grouping strategy -->
+                
+                
+                
+                
+                
+                
+                <!-- Check if this is a payment group (card_number + expiry fields) -->
+                
+                
+                <!-- Check if this is a name group (first_name + last_name) -->
+                
+                  
+                  
+                
+                
+                <!-- Check if this is an address group (address fields) -->
+                
+                
+                <!-- Check if group has more than 3 fields (default to vertical) -->
+                
+                
+                <!-- Render grouped fields with appropriate strategy -->
+                
+                  <!-- Horizontal layout: all fields on same line (default) -->
+                  <div class="field-group-container">
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="guest_first_name">Guest first name *</label>
+                            
+                            <input name="guest_first_name" id="guest_first_name" type="text" placeholder="" required class="form-field" />
+                            
+                            <span class="field-error" id="error-guest_first_name"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="guest_last_name">Guest last name *</label>
+                            
+                            <input name="guest_last_name" id="guest_last_name" type="text" placeholder="" required class="form-field" />
+                            
+                            <span class="field-error" id="error-guest_last_name"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                  </div>
+                
+              
+            
+          
+             
+          
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <div class="amount-display">
+                    <label>Amount</label><br>
+                    <span>$1,085.52</span>
+                    <input type="hidden" name="amount_due" value="$1,085.52" />
+                </div>
+                
+              
+            
+          
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+                 
+                   </div>  <!-- Close previous section -->
+                 
+                 <div class="cosmopolitan-section" id="cardholder-section">
+                   <h3>Cardholder Information</h3>
+                 
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <!-- Determine grouping strategy -->
+                
+                
+                
+                
+                
+                
+                <!-- Check if this is a payment group (card_number + expiry fields) -->
+                
+                
+                <!-- Check if this is a name group (first_name + last_name) -->
+                
+                  
+                  
+                
+                
+                <!-- Check if this is an address group (address fields) -->
+                
+                
+                <!-- Check if group has more than 3 fields (default to vertical) -->
+                
+                
+                <!-- Render grouped fields with appropriate strategy -->
+                
+                  <!-- Horizontal layout: all fields on same line (default) -->
+                  <div class="field-group-container">
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="first_name">First name on card *</label>
+                            
+                            <input name="first_name" id="first_name" type="text" value="Jack" required class="form-field" />
+                            
+                            <span class="field-error" id="error-first_name"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="last_name">Last name on card *</label>
+                            
+                            <input name="last_name" id="last_name" type="text" value="Johnson" required class="form-field" />
+                            
+                            <span class="field-error" id="error-last_name"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                  </div>
+                
+              
+            
+          
+             
+          
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <!-- Check if this field is part of another field's group -->
+                
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                
+                
+                  <!-- Single field -->
+                  <div class="field-group">
+                    <label for="company">Company</label>
+                    
+                    <input name="company" id="company" type="text" placeholder=""  class="form-field" />
+                    
+                    <span class="field-error" id="error-company"></span>
+                  </div>
+                  
+                
+              
+            
+          
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <!-- Determine grouping strategy -->
+                
+                
+                
+                
+                
+                
+                <!-- Check if this is a payment group (card_number + expiry fields) -->
+                
+                
+                <!-- Check if this is a name group (first_name + last_name) -->
+                
+                
+                <!-- Check if this is an address group (address fields) -->
+                
+                  
+                  
+                
+                
+                <!-- Check if group has more than 3 fields (default to vertical) -->
+                
+                
+                <!-- Render grouped fields with appropriate strategy -->
+                
+                  <!-- Address fields: address_line1 on its own, city/state/postal together -->
+                  <div class="field-group-container mixed">
+                    
+                      
+                        
+                          
+                            <!-- Address lines get their own lines -->
+                            <div class="field-group-item">
+                              <label for="address_line1">Address *</label>
+                              <input name="address_line1" id="address_line1" type="text" placeholder="" required class="form-field" />
+                              <span class="field-error" id="error-address_line1"></span>
+                            </div>
+                            
+                          
+                        
+                      
+                    
+                      
+                        
+                          
+                        
+                      
+                    
+                      
+                        
+                          
+                        
+                      
+                    
+                      
+                        
+                          
+                        
+                      
+                    
+                      
+                        
+                          
+                        
+                      
+                    
+                    
+                    <!-- City/State/Postal together -->
+                    <div class="field-sub-group">
+                      
+                        
+                          
+                        
+                      
+                        
+                          
+                            <div class="field-group-item">
+                              <label for="city">City *</label>
+                              
+                              <input name="city" id="city" type="text" placeholder="" required class="form-field" />
+                              
+                              <span class="field-error" id="error-city"></span>
+                            </div>
+                            
+                          
+                        
+                      
+                        
+                          
+                            <div class="field-group-item">
+                              <label for="state">State/Province *</label>
+                              
+                              <select name="state" id="state" required class="form-field">
+                                <option value="">Select...</option>
+                                
+                                  
+                                  <option value="Alabama" selected>Alabama</option>
+                                  
+                                  <option value="Alaska">Alaska</option>
+                                  
+                                  <option value="Arizona">Arizona</option>
+                                  
+                                  <option value="Arkansas">Arkansas</option>
+                                  
+                                  <option value="California">California</option>
+                                  
+                                  <option value="Colorado">Colorado</option>
+                                  
+                                  <option value="Connecticut">Connecticut</option>
+                                  
+                                  <option value="Delaware">Delaware</option>
+                                  
+                                  <option value="Florida">Florida</option>
+                                  
+                                  <option value="Georgia">Georgia</option>
+                                  
+                                  <option value="Hawaii">Hawaii</option>
+                                  
+                                  <option value="Idaho">Idaho</option>
+                                  
+                                  <option value="Illinois">Illinois</option>
+                                  
+                                  <option value="Indiana">Indiana</option>
+                                  
+                                  <option value="Iowa">Iowa</option>
+                                  
+                                  <option value="Kansas">Kansas</option>
+                                  
+                                  <option value="Kentucky">Kentucky</option>
+                                  
+                                  <option value="Louisiana">Louisiana</option>
+                                  
+                                  <option value="Maine">Maine</option>
+                                  
+                                  <option value="Maryland">Maryland</option>
+                                  
+                                  <option value="Massachusetts">Massachusetts</option>
+                                  
+                                  <option value="Michigan">Michigan</option>
+                                  
+                                  <option value="Minnesota">Minnesota</option>
+                                  
+                                  <option value="Mississippi">Mississippi</option>
+                                  
+                                  <option value="Missouri">Missouri</option>
+                                  
+                                  <option value="Montana">Montana</option>
+                                  
+                                  <option value="Nebraska">Nebraska</option>
+                                  
+                                  <option value="Nevada">Nevada</option>
+                                  
+                                  <option value="New Hampshire">New Hampshire</option>
+                                  
+                                  <option value="New Jersey">New Jersey</option>
+                                  
+                                  <option value="New Mexico">New Mexico</option>
+                                  
+                                  <option value="New York">New York</option>
+                                  
+                                  <option value="North Carolina">North Carolina</option>
+                                  
+                                  <option value="North Dakota">North Dakota</option>
+                                  
+                                  <option value="Ohio">Ohio</option>
+                                  
+                                  <option value="Oklahoma">Oklahoma</option>
+                                  
+                                  <option value="Oregon">Oregon</option>
+                                  
+                                  <option value="Pennsylvania">Pennsylvania</option>
+                                  
+                                  <option value="Rhode Island">Rhode Island</option>
+                                  
+                                  <option value="South Carolina">South Carolina</option>
+                                  
+                                  <option value="South Dakota">South Dakota</option>
+                                  
+                                  <option value="Tennessee">Tennessee</option>
+                                  
+                                  <option value="Texas">Texas</option>
+                                  
+                                  <option value="Utah">Utah</option>
+                                  
+                                  <option value="Vermont">Vermont</option>
+                                  
+                                  <option value="Virginia">Virginia</option>
+                                  
+                                  <option value="Washington">Washington</option>
+                                  
+                                  <option value="West Virginia">West Virginia</option>
+                                  
+                                  <option value="Wisconsin">Wisconsin</option>
+                                  
+                                  <option value="Wyoming">Wyoming</option>
+                                  
+                                
+                              </select>
+                              
+                              <span class="field-error" id="error-state"></span>
+                            </div>
+                            
+                          
+                        
+                      
+                        
+                          
+                            <div class="field-group-item">
+                              <label for="postal_code">Zip/Postal Code *</label>
+                              
+                              <input name="postal_code" id="postal_code" type="text" placeholder="" required class="form-field" />
+                              
+                              <span class="field-error" id="error-postal_code"></span>
+                            </div>
+                            
+                          
+                        
+                      
+                        
+                          
+                        
+                      
+                    </div>
+                    
+                    <!-- Country on its own line -->
+                    
+                      
+                        
+                      
+                    
+                      
+                        
+                      
+                    
+                      
+                        
+                      
+                    
+                      
+                        
+                      
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="country">Country *</label>
+                            <select name="country" id="country" required class="form-field">
+                              <option value="">Select...</option>
+                              
+                                
+                                <option value="United States" selected>United States</option>
+                                
+                                <option value="Canada">Canada</option>
+                                
+                                <option value="United Kingdom">United Kingdom</option>
+                                
+                                <option value="Australia">Australia</option>
+                                
+                                <option value="Germany">Germany</option>
+                                
+                                <option value="France">France</option>
+                                
+                                <option value="Italy">Italy</option>
+                                
+                                <option value="Spain">Spain</option>
+                                
+                                <option value="Japan">Japan</option>
+                                
+                                <option value="Mexico">Mexico</option>
+                                
+                              
+                            </select>
+                            <span class="field-error" id="error-country"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                  </div>
+                
+                
+              
+            
+          
+             
+          
+             
+          
+             
+          
+             
+          
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <!-- Determine grouping strategy -->
+                
+                
+                
+                
+                
+                
+                <!-- Check if this is a payment group (card_number + expiry fields) -->
+                
+                
+                <!-- Check if this is a name group (first_name + last_name) -->
+                
+                
+                <!-- Check if this is an address group (address fields) -->
+                
+                
+                <!-- Check if group has more than 3 fields (default to vertical) -->
+                
+                
+                <!-- Render grouped fields with appropriate strategy -->
+                
+                  <!-- Horizontal layout: all fields on same line (default) -->
+                  <div class="field-group-container">
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="email">Email *</label>
+                            
+                            <input name="email" id="email" type="email" placeholder="" required class="form-field" />
+                            
+                            <span class="field-error" id="error-email"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="phone">Phone *</label>
+                            
+                            <input name="phone" id="phone" type="tel" placeholder="" required class="form-field" />
+                            
+                            <span class="field-error" id="error-phone"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                      
+                        
+                          <div class="field-group-item">
+                            <label for="fax">Fax</label>
+                            
+                            <input name="fax" id="fax" type="tel" placeholder=""  class="form-field" />
+                            
+                            <span class="field-error" id="error-fax"></span>
+                          </div>
+                          
+                        
+                      
+                    
+                  </div>
+                
+              
+            
+          
+             
+          
+             
+          
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <!-- Check if this field is part of another field's group -->
+                
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                
+                
+                  <!-- Single field -->
+                  <div class="field-group">
+                    <label for="amount">Amount *</label>
+                    
+                    <input name="amount" id="amount" type="text" placeholder="" required value="$1,085.52" class="form-field" />
+                    
+                    <span class="field-error" id="error-amount"></span>
+                  </div>
+                  
+                
+              
+            
+          
+          
+          <!-- Close last cosmopolitan section if open -->
+          
+            </div>  <!-- Close open section -->
+          
+
+          
+            <div class="field-group">
+              <label for="signature_data">Signature *</label>
+              <canvas id="signature-pad"></canvas>
+              <button type="button" id="clear-sign">Clear</button>
+              <input type="hidden" name="signature_data" id="signature_data" required class="form-field" />
+              <span class="field-error" id="error-signature_data"></span>
+            </div>
+          
+
+          
+
+          
+
+          <div class="form-navigation">
+            
+            
+              <button type="button" class="next-page" data-next="2">Next</button>
+            
+          </div>
+          
+        </div>
+      
+        <div class="form-page" data-page="2" style="display: none;">
+          
+          
+          
+          <!-- Define field categories for all layouts -->
+          
+          
+          
+          <!-- Set up field categories for cosmopolitan -->
+          
+            
+            
+          
+           
+                                 <!-- Process fields with cosmopolitan sections -->
+           
+             
+               
+               <!-- Add Reservation Information header before first reservation field -->
+               
+               
+               <!-- Add Cardholder Information header before first cardholder field -->
+               
+               
+               <!-- Special handling for amount_due in cosmopolitan style -->
+               
+                <!-- Determine grouping strategy -->
+                
+                
+                
+                
+                
+                
+                <!-- Check if this is a payment group (card_number + expiry fields) -->
+                
+                  
+                  
+                
+                
+                <!-- Check if this is a name group (first_name + last_name) -->
+                
+                
+                <!-- Check if this is an address group (address fields) -->
+                
+                
+                <!-- Check if group has more than 3 fields (default to vertical) -->
+                
+                
+                <!-- Render grouped fields with appropriate strategy -->
+                
+                  <!-- Payment fields: card_number on its own line, expiry fields together -->
+                  <div class="field-group-container mixed">
+                    
+                      
+                        
+                          
+                            <!-- Card number gets its own line -->
+                            <div class="field-group-item">
+                              <label for="card_number">Card number *</label>
+                              <input name="card_number" id="card_number" type="text" placeholder="" required class="form-field" />
+                              <span class="field-error" id="error-card_number"></span>
+                            </div>
+                            
+                          
+                        
+                      
+                    
+                      
+                        
+                          
+                        
+                      
+                    
+                      
+                        
+                          
+                        
+                      
+                    
+                      
+                        
+                          
+                        
+                      
+                    
+                    
+                    <!-- Expiry and CVV fields together -->
+                    <div class="field-sub-group">
+                      
+                        
+                          
+                        
+                      
+                        
+                          
+                            <div class="field-group-item">
+                              <label for="expiry_month">Expiration Date *</label>
+                              
+                              <select name="expiry_month" id="expiry_month" required class="form-field">
+                                <option value="">Select...</option>
+                                
+                                  
+                                  <option value="01">01</option>
+                                  
+                                  <option value="02">02</option>
+                                  
+                                  <option value="03">03</option>
+                                  
+                                  <option value="04">04</option>
+                                  
+                                  <option value="05">05</option>
+                                  
+                                  <option value="06">06</option>
+                                  
+                                  <option value="07">07</option>
+                                  
+                                  <option value="08">08</option>
+                                  
+                                  <option value="09">09</option>
+                                  
+                                  <option value="10">10</option>
+                                  
+                                  <option value="11">11</option>
+                                  
+                                  <option value="12">12</option>
+                                  
+                                
+                              </select>
+                              
+                              <span class="field-error" id="error-expiry_month"></span>
+                            </div>
+                            
+                          
+                        
+                      
+                        
+                          
+                            <div class="field-group-item">
+                              <label for="expiry_year">Year *</label>
+                              
+                              <select name="expiry_year" id="expiry_year" required class="form-field">
+                                <option value="">Select...</option>
+                                
+                                  
+                                  <option value="2025">2025</option>
+                                  
+                                  <option value="2026">2026</option>
+                                  
+                                  <option value="2027">2027</option>
+                                  
+                                  <option value="2028">2028</option>
+                                  
+                                  <option value="2029">2029</option>
+                                  
+                                  <option value="2030">2030</option>
+                                  
+                                  <option value="2031">2031</option>
+                                  
+                                  <option value="2032">2032</option>
+                                  
+                                  <option value="2033">2033</option>
+                                  
+                                  <option value="2034">2034</option>
+                                  
+                                  <option value="2035">2035</option>
+                                  
+                                
+                              </select>
+                              
+                              <span class="field-error" id="error-expiry_year"></span>
+                            </div>
+                            
+                          
+                        
+                      
+                        
+                          
+                            <div class="field-group-item">
+                              <label for="cvv">CVV card code *</label>
+                              
+                              <input name="cvv" id="cvv" type="text" placeholder="" required class="form-field" />
+                              
+                              <span class="field-error" id="error-cvv"></span>
+                            </div>
+                            
+                          
+                        
+                      
+                    </div>
+                  </div>
+                
+                
+              
+            
+          
+             
+          
+             
+          
+             
+          
+          
+          <!-- Close last cosmopolitan section if open -->
+          
+
+          
+
+          
+            
+            <div class="agreement">
+              <input type="checkbox" name="terms_agreement" id="terms_agreement" required class="form-field" />
+              <label for="terms_agreement">I have read and agree to the above Terms &amp; Conditions</label>
+              <span class="field-error" id="error-terms_agreement"></span>
+            </div>
+            
+          
+
+          
+
+          <div class="form-navigation">
+            
+              <button type="button" class="prev-page" data-prev="1">Back</button>
+            
+            
+              <button type="submit" id="submit-btn">Finish &gt;</button>
+            
+          </div>
+          
+            <div id="validation-message" class="validation-message"></div>
+          
+        </div>
+      
+    </div>
+  </form>
+</div>
+
+
+<script>!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):t.SignaturePad=e()}(this,function(){"use strict";function t(t,e,i){this.x=t,this.y=e,this.time=i||(new Date).getTime()}function e(t,e,i,o){this.startPoint=t,this.control1=e,this.control2=i,this.endPoint=o}function i(t,e,i){var o,n,s,r=null,h=0;i||(i={});var a=function(){h=!1===i.leading?0:Date.now(),r=null,s=t.apply(o,n),r||(o=n=null)};return function(){var c=Date.now();h||!1!==i.leading||(h=c);var d=e-(c-h);return o=this,n=arguments,d<=0||d>e?(r&&(clearTimeout(r),r=null),h=c,s=t.apply(o,n),r||(o=n=null)):r||!1===i.trailing||(r=setTimeout(a,d)),s}}function o(t,e){var n=this,s=e||{};this.velocityFilterWeight=s.velocityFilterWeight||.7,this.minWidth=s.minWidth||.5,this.maxWidth=s.maxWidth||2.5,this.throttle="throttle"in s?s.throttle:16,this.minDistance="minDistance"in s?s.minDistance:5,this.throttle?this._strokeMoveUpdate=i(o.prototype._strokeUpdate,this.throttle):this._strokeMoveUpdate=o.prototype._strokeUpdate,this.dotSize=s.dotSize||function(){return(this.minWidth+this.maxWidth)/2},this.penColor=s.penColor||"black",this.backgroundColor=s.backgroundColor||"rgba(0,0,0,0)",this.onBegin=s.onBegin,this.onEnd=s.onEnd,this._canvas=t,this._ctx=t.getContext("2d"),this.clear(),this._handleMouseDown=function(t){1===t.which&&(n._mouseButtonDown=!0,n._strokeBegin(t))},this._handleMouseMove=function(t){n._mouseButtonDown&&n._strokeMoveUpdate(t)},this._handleMouseUp=function(t){1===t.which&&n._mouseButtonDown&&(n._mouseButtonDown=!1,n._strokeEnd(t))},this._handleTouchStart=function(t){if(1===t.targetTouches.length){var e=t.changedTouches[0];n._strokeBegin(e)}},this._handleTouchMove=function(t){t.preventDefault();var e=t.targetTouches[0];n._strokeMoveUpdate(e)},this._handleTouchEnd=function(t){t.target===n._canvas&&(t.preventDefault(),n._strokeEnd(t))},this.on()}return t.prototype.velocityFrom=function(t){return this.time!==t.time?this.distanceTo(t)/(this.time-t.time):1},t.prototype.distanceTo=function(t){return Math.sqrt(Math.pow(this.x-t.x,2)+Math.pow(this.y-t.y,2))},t.prototype.equals=function(t){return this.x===t.x&&this.y===t.y&&this.time===t.time},e.prototype.length=function(){for(var t=0,e=void 0,i=void 0,o=0;o<=10;o+=1){var n=o/10,s=this._point(n,this.startPoint.x,this.control1.x,this.control2.x,this.endPoint.x),r=this._point(n,this.startPoint.y,this.control1.y,this.control2.y,this.endPoint.y);if(o>0){var h=s-e,a=r-i;t+=Math.sqrt(h*h+a*a)}e=s,i=r}return t},e.prototype._point=function(t,e,i,o,n){return e*(1-t)*(1-t)*(1-t)+3*i*(1-t)*(1-t)*t+3*o*(1-t)*t*t+n*t*t*t},o.prototype.clear=function(){var t=this._ctx,e=this._canvas;t.fillStyle=this.backgroundColor,t.clearRect(0,0,e.width,e.height),t.fillRect(0,0,e.width,e.height),this._data=[],this._reset(),this._isEmpty=!0},o.prototype.fromDataURL=function(t){var e=this,i=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},o=new Image,n=i.ratio||window.devicePixelRatio||1,s=i.width||this._canvas.width/n,r=i.height||this._canvas.height/n;this._reset(),o.src=t,o.onload=function(){e._ctx.drawImage(o,0,0,s,r)},this._isEmpty=!1},o.prototype.toDataURL=function(t){var e;switch(t){case"image/svg+xml":return this._toSVG();default:for(var i=arguments.length,o=Array(i>1?i-1:0),n=1;n<i;n++)o[n-1]=arguments[n];return(e=this._canvas).toDataURL.apply(e,[t].concat(o))}},o.prototype.on=function(){this._handleMouseEvents(),this._handleTouchEvents()},o.prototype.off=function(){this._canvas.removeEventListener("mousedown",this._handleMouseDown),this._canvas.removeEventListener("mousemove",this._handleMouseMove),document.removeEventListener("mouseup",this._handleMouseUp),this._canvas.removeEventListener("touchstart",this._handleTouchStart),this._canvas.removeEventListener("touchmove",this._handleTouchMove),this._canvas.removeEventListener("touchend",this._handleTouchEnd)},o.prototype.isEmpty=function(){return this._isEmpty},o.prototype._strokeBegin=function(t){this._data.push([]),this._reset(),this._strokeUpdate(t),"function"==typeof this.onBegin&&this.onBegin(t)},o.prototype._strokeUpdate=function(t){var e=t.clientX,i=t.clientY,o=this._createPoint(e,i),n=this._data[this._data.length-1],s=n&&n[n.length-1],r=s&&o.distanceTo(s)<this.minDistance;if(!s||!r){var h=this._addPoint(o),a=h.curve,c=h.widths;a&&c&&this._drawCurve(a,c.start,c.end),this._data[this._data.length-1].push({x:o.x,y:o.y,time:o.time,color:this.penColor})}},o.prototype._strokeEnd=function(t){var e=this.points.length>2,i=this.points[0];if(!e&&i&&this._drawDot(i),i){var o=this._data[this._data.length-1],n=o[o.length-1];i.equals(n)||o.push({x:i.x,y:i.y,time:i.time,color:this.penColor})}"function"==typeof this.onEnd&&this.onEnd(t)},o.prototype._handleMouseEvents=function(){this._mouseButtonDown=!1,this._canvas.addEventListener("mousedown",this._handleMouseDown),this._canvas.addEventListener("mousemove",this._handleMouseMove),document.addEventListener("mouseup",this._handleMouseUp)},o.prototype._handleTouchEvents=function(){this._canvas.style.msTouchAction="none",this._canvas.style.touchAction="none",this._canvas.addEventListener("touchstart",this._handleTouchStart),this._canvas.addEventListener("touchmove",this._handleTouchMove),this._canvas.addEventListener("touchend",this._handleTouchEnd)},o.prototype._reset=function(){this.points=[],this._lastVelocity=0,this._lastWidth=(this.minWidth+this.maxWidth)/2,this._ctx.fillStyle=this.penColor},o.prototype._createPoint=function(e,i,o){var n=this._canvas.getBoundingClientRect();return new t(e-n.left,i-n.top,o||(new Date).getTime())},o.prototype._addPoint=function(t){var i=this.points,o=void 0;if(i.push(t),i.length>2){3===i.length&&i.unshift(i[0]),o=this._calculateCurveControlPoints(i[0],i[1],i[2]);var n=o.c2;o=this._calculateCurveControlPoints(i[1],i[2],i[3]);var s=o.c1,r=new e(i[1],n,s,i[2]),h=this._calculateCurveWidths(r);return i.shift(),{curve:r,widths:h}}return{}},o.prototype._calculateCurveControlPoints=function(e,i,o){var n=e.x-i.x,s=e.y-i.y,r=i.x-o.x,h=i.y-o.y,a={x:(e.x+i.x)/2,y:(e.y+i.y)/2},c={x:(i.x+o.x)/2,y:(i.y+o.y)/2},d=Math.sqrt(n*n+s*s),l=Math.sqrt(r*r+h*h),u=a.x-c.x,v=a.y-c.y,p=l/(d+l),_={x:c.x+u*p,y:c.y+v*p},y=i.x-_.x,f=i.y-_.y;return{c1:new t(a.x+y,a.y+f),c2:new t(c.x+y,c.y+f)}},o.prototype._calculateCurveWidths=function(t){var e=t.startPoint,i=t.endPoint,o={start:null,end:null},n=this.velocityFilterWeight*i.velocityFrom(e)+(1-this.velocityFilterWeight)*this._lastVelocity,s=this._strokeWidth(n);return o.start=this._lastWidth,o.end=s,this._lastVelocity=n,this._lastWidth=s,o},o.prototype._strokeWidth=function(t){return Math.max(this.maxWidth/(t+1),this.minWidth)},o.prototype._drawPoint=function(t,e,i){var o=this._ctx;o.moveTo(t,e),o.arc(t,e,i,0,2*Math.PI,!1),this._isEmpty=!1},o.prototype._drawCurve=function(t,e,i){var o=this._ctx,n=i-e,s=Math.floor(t.length());o.beginPath();for(var r=0;r<s;r+=1){var h=r/s,a=h*h,c=a*h,d=1-h,l=d*d,u=l*d,v=u*t.startPoint.x;v+=3*l*h*t.control1.x,v+=3*d*a*t.control2.x,v+=c*t.endPoint.x;var p=u*t.startPoint.y;p+=3*l*h*t.control1.y,p+=3*d*a*t.control2.y,p+=c*t.endPoint.y;var _=e+c*n;this._drawPoint(v,p,_)}o.closePath(),o.fill()},o.prototype._drawDot=function(t){var e=this._ctx,i="function"==typeof this.dotSize?this.dotSize():this.dotSize;e.beginPath(),this._drawPoint(t.x,t.y,i),e.closePath(),e.fill()},o.prototype._fromData=function(e,i,o){for(var n=0;n<e.length;n+=1){var s=e[n];if(s.length>1)for(var r=0;r<s.length;r+=1){var h=s[r],a=new t(h.x,h.y,h.time),c=h.color;if(0===r)this.penColor=c,this._reset(),this._addPoint(a);else if(r!==s.length-1){var d=this._addPoint(a),l=d.curve,u=d.widths;l&&u&&i(l,u,c)}}else{this._reset();o(s[0])}}},o.prototype._toSVG=function(){var t=this,e=this._data,i=this._canvas,o=Math.max(window.devicePixelRatio||1,1),n=i.width/o,s=i.height/o,r=document.createElementNS("http://www.w3.org/2000/svg","svg");r.setAttributeNS(null,"width",i.width),r.setAttributeNS(null,"height",i.height),this._fromData(e,function(t,e,i){var o=document.createElement("path");if(!(isNaN(t.control1.x)||isNaN(t.control1.y)||isNaN(t.control2.x)||isNaN(t.control2.y))){var n="M "+t.startPoint.x.toFixed(3)+","+t.startPoint.y.toFixed(3)+" C "+t.control1.x.toFixed(3)+","+t.control1.y.toFixed(3)+" "+t.control2.x.toFixed(3)+","+t.control2.y.toFixed(3)+" "+t.endPoint.x.toFixed(3)+","+t.endPoint.y.toFixed(3);o.setAttribute("d",n),o.setAttribute("stroke-width",(2.25*e.end).toFixed(3)),o.setAttribute("stroke",i),o.setAttribute("fill","none"),o.setAttribute("stroke-linecap","round"),r.appendChild(o)}},function(e){var i=document.createElement("circle"),o="function"==typeof t.dotSize?t.dotSize():t.dotSize;i.setAttribute("r",o),i.setAttribute("cx",e.x),i.setAttribute("cy",e.y),i.setAttribute("fill",e.color),r.appendChild(i)});var h='<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 '+n+" "+s+'" width="'+n+'" height="'+s+'">',a=r.innerHTML;if(void 0===a){var c=document.createElement("dummy"),d=r.childNodes;c.innerHTML="";for(var l=0;l<d.length;l+=1)c.appendChild(d[l].cloneNode(!0));a=c.innerHTML}var u=h+a+"</svg>";return"data:image/svg+xml;base64,"+btoa(u)},o.prototype.fromData=function(t){var e=this;this.clear(),this._fromData(t,function(t,i){return e._drawCurve(t,i.start,i.end)},function(t){return e._drawDot(t)}),this._data=t},o.prototype.toData=function(){return this._data},o});
+</script>
+
+
+<script>function resizeCanvas(canvas) {
+  const ratio = Math.max(window.devicePixelRatio || 1, 1);
+  // Set canvas width/height to match its display size * device pixel ratio
+  canvas.width = canvas.offsetWidth * ratio;
+  canvas.height = canvas.offsetHeight * ratio;
+  canvas.getContext('2d').scale(ratio, ratio);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Multi-page nav is handled by the validation script in base.html
+  // This simple navigation is disabled to prevent conflicts
+
+  // Signature pad
+  const canvas = document.getElementById('signature-pad');
+  if (canvas) {
+    try {
+      resizeCanvas(canvas);
+      const signaturePad = new SignaturePad(canvas);
+      document
+        .getElementById('clear-sign')
+        .addEventListener('click', () => signaturePad.clear());
+      document.getElementById('payment-form').addEventListener('submit', () => {
+        document.getElementById('signature_data').value =
+          signaturePad.toDataURL();
+      });
+    } catch (error) {
+      console.error('Error initializing SignaturePad:', error);
+    }
+  }
+});
+</script>
+
+<script>
+// Deterministic hash function for reproducible behavior
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash);
+}
+
+// Track if a submit attempt has been made
+let submitAttempted = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('payment-form');
+    const pages = document.querySelectorAll('.form-page');
+    const submitBtn = document.getElementById('submit-btn');
+    const formId = 'COS2024'; // Get form ID from template
+
+    // Deterministic validation strategy selection based on form ID
+    const validationStrategies = [
+        'disabled-until-valid',      // Button disabled until all fields valid
+        'enabled-but-blocked',       // Button enabled but does nothing if invalid
+        'error-on-click',            // Button enabled, shows error when clicked if invalid
+        'shake-on-invalid',          // Button enabled, shakes when clicked if invalid
+        'progressive-enable',        // Button gradually becomes enabled as fields fill
+        'warning-first',             // Button enabled, shows warning first, then error
+        'stealth-mode'               // Button always enabled, silent failure if invalid
+    ];
+
+    const strategyHash = simpleHash(formId);
+    const selectedStrategy = validationStrategies[strategyHash % validationStrategies.length];
+    console.log('Form ID:', formId, 'Hash:', strategyHash, 'Selected strategy:', selectedStrategy);
+
+    // Navigation
+    document.querySelectorAll('.next-page').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const currentPage = parseInt(this.closest('.form-page').dataset.page);
+            const nextPage = parseInt(this.dataset.next);
+            if (validateCurrentPage(currentPage, true)) {
+                showPage(nextPage);
+            } else {
+                // Show visual feedback for validation failure
+                shakeButton(this);
+                highlightInvalidFieldsOnPage(currentPage);
+                showPageValidationMessage(currentPage, 'Please complete all required fields before proceeding.');
+            }
+        });
+    });
+
+    document.querySelectorAll('.prev-page').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const currentPage = parseInt(this.closest('.form-page').dataset.page);
+            const prevPage = parseInt(this.dataset.prev);
+            showPage(prevPage);
+        });
+    });
+
+    // Track touched fields
+    document.querySelectorAll('.form-field').forEach(field => {
+        field.addEventListener('focus', function() {
+            this.setAttribute('data-touched', 'true');
+        });
+        field.addEventListener('input', function() {
+            validateField({ target: this }, false, true); // Clear errors when user types
+            updateSubmitButton();
+            updateNextButton(); // Update next button state when fields change
+        });
+        field.addEventListener('blur', function() {
+            validateField({ target: this }, false, true); // Clear errors on blur
+            updateSubmitButton();
+            updateNextButton(); // Update next button state when fields change
+        });
+    });
+
+    // Initialize signature pad if present
+    const signaturePad = document.getElementById('signature-pad');
+    const signatureData = document.getElementById('signature_data');
+    const clearButton = document.getElementById('clear-sign');
+    
+    if (signaturePad && typeof SignaturePad !== 'undefined') {
+        const pad = new SignaturePad(signaturePad, {
+            backgroundColor: 'rgba(255, 255, 255, 0)',
+            penColor: 'rgb(0, 0, 0)'
+        });
+        
+        // Set canvas size
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            signaturePad.width = signaturePad.offsetWidth * ratio;
+            signaturePad.height = signaturePad.offsetHeight * ratio;
+            signaturePad.getContext("2d").scale(ratio, ratio);
+            pad.clear();
+        }
+        
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+        
+        // Handle signature events
+        pad.onEnd = function() {
+            signatureData.value = pad.toDataURL();
+            signatureData.setAttribute('data-touched', 'true');
+            console.log('Signature drawn, value:', signatureData.value ? 'has value' : 'empty');
+            // Force validation to show/clear errors
+            const isValid = validateField({ target: signatureData }, true, true);
+            console.log('Signature validation result:', isValid);
+            // Clear error immediately if valid
+            if (isValid) {
+                const errorSpan = document.getElementById('error-signature_data');
+                if (errorSpan) {
+                    errorSpan.textContent = '';
+                }
+            }
+            updateSubmitButton();
+            updateNextButton();
+        };
+        
+        // Clear button functionality
+        if (clearButton) {
+            clearButton.addEventListener('click', function() {
+                pad.clear();
+                signatureData.value = '';
+                signatureData.setAttribute('data-touched', 'true');
+                validateField({ target: signatureData }, true, true);
+                updateSubmitButton();
+                updateNextButton();
+            });
+        }
+    }
+
+    // Form submission with strategy-specific behavior
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitAttempted = true;
+            const isValid = validateAllPages();
+            // Strategy-specific handling
+            switch(selectedStrategy) {
+                case 'disabled-until-valid':
+                    if (isValid) {
+                        processSubmission();
+                    }
+                    break;
+                case 'enabled-but-blocked':
+                    if (isValid) {
+                        processSubmission();
+                    } else {
+                        // Do nothing - silent failure
+                        console.log('Form invalid, submission blocked');
+                    }
+                    break;
+                case 'error-on-click':
+                    if (isValid) {
+                        processSubmission();
+                    } else {
+                        showValidationMessage('Please fill in all required fields correctly before submitting.', 'error');
+                        highlightInvalidFields();
+                    }
+                    break;
+                case 'shake-on-invalid':
+                    if (isValid) {
+                        processSubmission();
+                    } else {
+                        shakeButton();
+                        showValidationMessage('Please complete all required fields.', 'warning');
+                    }
+                    break;
+                case 'progressive-enable':
+                    if (isValid) {
+                        processSubmission();
+                    } else {
+                        showValidationMessage('Almost there! Please complete the remaining fields.', 'info');
+                    }
+                    break;
+                case 'warning-first':
+                    if (isValid) {
+                        processSubmission();
+                    } else {
+                        const messageEl = document.getElementById('validation-message');
+                        if (messageEl.textContent.includes('Please complete')) {
+                            showValidationMessage('All fields must be completed correctly to proceed.', 'error');
+                        } else {
+                            showValidationMessage('Please complete all required fields before submitting.', 'warning');
+                        }
+                    }
+                    break;
+                case 'stealth-mode':
+                    if (isValid) {
+                        processSubmission();
+                    } else {
+                        // Silent failure - just don't submit
+                        console.log('Stealth mode: form invalid, no submission');
+                    }
+                    break;
+            }
+            // After submit attempt, update all fields to show errors if needed
+            document.querySelectorAll('.form-field').forEach(field => {
+                validateField({ target: field }, true, false); // Show errors but don't clear
+            });
+            updateSubmitButton();
+        });
+    }
+
+    // Strategy-specific submit button updates
+    function updateSubmitButton() {
+        if (!submitBtn) return;
+        const isValid = validateAllPages();
+        switch(selectedStrategy) {
+            case 'disabled-until-valid':
+                submitBtn.disabled = !isValid;
+                submitBtn.classList.toggle('pulse', isValid);
+                break;
+            case 'enabled-but-blocked':
+            case 'error-on-click':
+            case 'shake-on-invalid':
+            case 'progressive-enable':
+            case 'warning-first':
+                submitBtn.disabled = false;
+                submitBtn.classList.toggle('ready', isValid);
+                if (selectedStrategy === 'progressive-enable') {
+                    const progress = getFormProgress();
+                    submitBtn.style.opacity = 0.3 + (progress * 0.7);
+                } else {
+                    submitBtn.style.opacity = '';
+                }
+                break;
+            case 'stealth-mode':
+                submitBtn.disabled = false;
+                break;
+        }
+    }
+    // Initialize button state
+    updateSubmitButton();
+    
+    // Ensure Next button state is updated after DOM is ready
+    if (document.readyState === 'complete') {
+        updateNextButton();
+    } else {
+        window.addEventListener('load', updateNextButton);
+    }
+    
+    // Also update after a short delay to handle any async initialization
+    setTimeout(() => {
+        updateNextButton();
+    }, 100);
+    
+    // Debug: Check if navigation buttons exist
+    console.log('Next buttons found:', document.querySelectorAll('.next-page').length);
+    console.log('Prev buttons found:', document.querySelectorAll('.prev-page').length);
+});
+
+function showPage(pageNum) {
+    document.querySelectorAll('.form-page').forEach(page => {
+        page.style.display = 'none';
+    });
+    document.querySelector(`[data-page="${pageNum}"]`).style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Update next button state when page changes
+    setTimeout(() => {
+        updateNextButton();
+    }, 50);
+}
+
+function validateField(event, forceValidation = false, clearErrors = true) {
+    const field = event.target;
+    const errorSpan = document.getElementById(`error-${field.id}`);
+    // Only show errors if field has been touched or after submit attempt or forced
+    const touched = field.getAttribute('data-touched') === 'true';
+    const shouldShowError = touched || submitAttempted || forceValidation;
+    
+    // Skip validation for hidden fields (except signature)
+    if (field.type === 'hidden' && field.id !== 'signature_data') {
+        return true;
+    }
+    
+    // Signature validation (check this before generic required validation)
+    if (field.id === 'signature_data') {
+        if (!field.value || field.value.trim() === '') {
+            if (shouldShowError) {
+                showFieldError(field, 'Please provide your signature');
+            }
+            return false;
+        } else {
+            // Signature is valid - clear error only if allowed
+            if (clearErrors) {
+                errorSpan.textContent = '';
+                field.classList.remove('error');
+            }
+            return true;
+        }
+    }
+    
+    // Required field validation
+    // Skip validation for readonly fields that have values
+    if (field.required && !field.value.trim() && !field.readOnly) {
+        if (shouldShowError) {
+            showFieldError(field, 'This field is required');
+        }
+        return false;
+    }
+    // Email validation
+    if (field.type === 'email' && field.value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(field.value)) {
+            if (shouldShowError) {
+                showFieldError(field, 'Please enter a valid email address');
+            }
+            return false;
+        }
+    }
+    // Captcha validation
+    if (field.id === 'captcha_input') {
+        const userInput = field.value.trim().toUpperCase();
+        const correctAnswer = document.querySelector('input[name="captcha_answer"]').value.trim().toUpperCase();
+        if (userInput !== correctAnswer) {
+            if (shouldShowError) {
+                showFieldError(field, 'Incorrect captcha code');
+            }
+            return false;
+        }
+    }
+    
+    // If we get here, field is valid - clear any existing error only if allowed
+    if (clearErrors) {
+        errorSpan.textContent = '';
+        field.classList.remove('error');
+    }
+    return true;
+}
+
+function showFieldError(field, message) {
+    const errorSpan = document.getElementById(`error-${field.id}`);
+    errorSpan.textContent = message;
+    field.classList.add('error');
+}
+
+function showCaptchaError(message, pageNum = null) {
+    // Find the captcha container on the current page
+    let captchaContainer;
+    if (pageNum !== null) {
+        const currentPage = document.querySelector(`[data-page="${pageNum}"]`);
+        captchaContainer = currentPage ? currentPage.querySelector('.captcha-container') : null;
+    } else {
+        captchaContainer = document.querySelector('.captcha-container');
+    }
+    
+    if (captchaContainer) {
+        let errorDiv = captchaContainer.querySelector('.captcha-error');
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.className = 'captcha-error';
+            errorDiv.style.color = 'var(--error-color)';
+            errorDiv.style.fontSize = '0.875rem';
+            errorDiv.style.marginTop = '5px';
+            errorDiv.style.textAlign = 'left';  // Force left alignment
+            captchaContainer.appendChild(errorDiv);
+        }
+        errorDiv.textContent = message;
+    }
+}
+
+function validateCurrentPage(pageNum, showErrors = false) {
+    const currentPage = document.querySelector(`[data-page="${pageNum}"]`);
+    // Include signature_data even though it's hidden
+    const fields = currentPage.querySelectorAll('.form-field[required]:not([type="hidden"]), #signature_data[required]');
+    let isValid = true;
+    let hasEditableRequiredFields = false;
+    
+    fields.forEach(field => {
+        // Skip validation for readonly fields with values
+        if (field.readOnly && field.value) {
+            return;
+        }
+        
+        // Check if we have any editable required fields
+        if (!field.readOnly) {
+            hasEditableRequiredFields = true;
+        }
+        
+        if (!validateField({ target: field }, showErrors, showErrors)) {
+            isValid = false;
+        }
+    });
+    
+    // Check for reCAPTCHA or hCaptcha on this page
+    const recaptcha = currentPage.querySelector('.g-recaptcha');
+    const hcaptcha = currentPage.querySelector('.h-captcha');
+    
+    if (recaptcha) {
+        hasEditableRequiredFields = true;
+        // Check if reCAPTCHA is completed
+        try {
+            const response = grecaptcha.getResponse();
+            if (!response) {
+                isValid = false;
+                if (showErrors) {
+                    showCaptchaError('Please complete the reCAPTCHA', pageNum);
+                }
+            } else {
+                // Clear captcha error when captcha is valid
+                const currentPage = document.querySelector(`[data-page="${pageNum}"]`);
+                const captchaError = currentPage ? currentPage.querySelector('.captcha-error') : null;
+                if (captchaError && captchaError.textContent) {
+                    captchaError.textContent = '';
+                }
+            }
+        } catch (e) {
+            // grecaptcha not loaded or other error
+            isValid = false;
+            if (showErrors) {
+                showCaptchaError('reCAPTCHA not loaded properly', pageNum);
+            }
+        }
+    }
+    
+    if (hcaptcha) {
+        hasEditableRequiredFields = true;
+        // Check if hCaptcha is completed
+        try {
+            const response = hcaptcha.getResponse();
+            if (!response) {
+                isValid = false;
+                if (showErrors) {
+                    showCaptchaError('Please complete the hCaptcha', pageNum);
+                }
+            } else {
+                // Clear captcha error when captcha is valid
+                const currentPage = document.querySelector(`[data-page="${pageNum}"]`);
+                const captchaError = currentPage ? currentPage.querySelector('.captcha-error') : null;
+                if (captchaError && captchaError.textContent) {
+                    captchaError.textContent = '';
+                }
+            }
+        } catch (e) {
+            // hcaptcha not loaded or other error
+            isValid = false;
+            if (showErrors) {
+                showCaptchaError('hCaptcha not loaded properly', pageNum);
+            }
+        }
+    }
+    
+    // If all required fields are readonly with values, page is valid
+    if (!hasEditableRequiredFields && fields.length > 0) {
+        return true;
+    }
+    
+    return isValid;
+}
+
+function validateAllPages() {
+    const allFields = document.querySelectorAll('.form-field[required]');
+    let isValid = true;
+    allFields.forEach(field => {
+        if (!validateField({ target: field })) {
+            isValid = false;
+        }
+    });
+    return isValid;
+}
+
+function getFormProgress() {
+    const allFields = document.querySelectorAll('.form-field[required]');
+    let filledCount = 0;
+    allFields.forEach(field => {
+        if (field.value.trim()) {
+            filledCount++;
+        }
+    });
+    return filledCount / allFields.length;
+}
+
+function showValidationMessage(message, type = 'info') {
+    const messageEl = document.getElementById('validation-message');
+    messageEl.textContent = message;
+    messageEl.className = `validation-message ${type}`;
+    messageEl.style.display = 'block';
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        messageEl.style.display = 'none';
+    }, 5000);
+}
+
+function highlightInvalidFields() {
+    document.querySelectorAll('.form-field[required]').forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('error');
+            field.style.animation = 'shake 0.5s ease-in-out';
+        }
+    });
+}
+
+function shakeButton(button = null) {
+    const targetBtn = button || document.getElementById('submit-btn');
+    targetBtn.style.animation = 'shake 0.5s ease-in-out';
+    setTimeout(() => {
+        targetBtn.style.animation = '';
+    }, 500);
+}
+
+function processSubmission() {
+    const submitBtn = document.getElementById('submit-btn');
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Processing...';
+    // Simulate form submission
+    setTimeout(() => {
+        showSuccessPage();
+    }, 2000);
+}
+
+function showSuccessPage() {
+    const formId = 'COS2024';
+    const successMessages = [
+        "Payment processed successfully! Your order has been confirmed.",
+        "Thank you! Your payment has been received and processed.",
+        "Success! Your transaction has been completed successfully.",
+        "Payment confirmed! You will receive a confirmation email shortly.",
+        "Transaction successful! Thank you for your purchase.",
+        "Payment approved! Your order is now being processed.",
+        "Excellent! Your payment has been verified and accepted.",
+        "Success! Your transaction has been securely processed."
+    ];
+    // Deterministic success message selection based on form ID
+    const messageHash = simpleHash(formId);
+    const selectedMessage = successMessages[messageHash % successMessages.length];
+    document.getElementById('form-container').innerHTML = `
+        <div class="success-page">
+            <div class="success-icon">✅</div>
+            <h2>Payment Successful</h2>
+            <p>${selectedMessage}</p>
+            <div class="success-details">
+                <p><strong>Transaction ID:</strong> ${generateTransactionId(formId)}</p>
+                <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                <p><strong>Time:</strong> ${new Date().toLocaleTimeString()}</p>
+            </div>
+            <button onclick="window.location.reload()" class="new-form-btn">Create New Form</button>
+        </div>
+    `;
+}
+
+function generateTransactionId(formId) {
+    // Deterministic transaction ID based on form ID
+    const hash = simpleHash(formId);
+    const timestamp = Math.floor(Date.now() / 1000) % 1000000;
+    const combined = hash + timestamp;
+    return 'TXN-' + combined.toString(36).substr(0, 9).toUpperCase();
+}
+
+function highlightInvalidFieldsOnPage(pageNum) {
+    const currentPage = document.querySelector(`[data-page="${pageNum}"]`);
+    // Include signature_data even though it's hidden
+    const fields = currentPage.querySelectorAll('.form-field[required]:not([type="hidden"]), #signature_data[required]');
+    fields.forEach(field => {
+        if (!field.value.trim() && !field.readOnly) {
+            // For signature field, show error using validateField
+            if (field.id === 'signature_data') {
+                // Mark as touched and validate to show error
+                field.setAttribute('data-touched', 'true');
+                validateField({ target: field }, true, false); // Show error but don't clear
+            } else {
+                field.classList.add('error');
+                field.style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => {
+                    field.style.animation = '';
+                }, 500);
+            }
+        }
+    });
+}
+
+function showPageValidationMessage(pageNum, message) {
+    const currentPage = document.querySelector(`[data-page="${pageNum}"]`);
+    let messageEl = currentPage.querySelector('.page-validation-message');
+    
+    if (!messageEl) {
+        messageEl = document.createElement('div');
+        messageEl.className = 'page-validation-message validation-message error';
+        // Insert before the form-navigation div
+        const navigation = currentPage.querySelector('.form-navigation');
+        navigation.parentNode.insertBefore(messageEl, navigation);
+    }
+    
+    messageEl.textContent = message;
+    messageEl.style.display = 'block';
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        messageEl.style.display = 'none';
+    }, 5000);
+}
+
+function updateNextButton() {
+    // Find the currently visible page
+    const currentPage = Array.from(document.querySelectorAll('.form-page')).find(page => {
+        return window.getComputedStyle(page).display !== 'none';
+    });
+    
+    if (!currentPage) {
+        console.log('No current page found');
+        return;
+    }
+    
+    const pageNum = parseInt(currentPage.dataset.page);
+    const nextBtn = currentPage.querySelector('.next-page');
+    
+    if (!nextBtn) {
+        console.log('No next button on page', pageNum);
+        return;
+    }
+    
+    const isValid = validateCurrentPage(pageNum);
+    console.log('Page', pageNum, 'validation:', isValid);
+    
+    // Debug: log field states
+    const currentPageEl = document.querySelector(`[data-page="${pageNum}"]`);
+    const debugFields = currentPageEl.querySelectorAll('.form-field[required]:not([type="hidden"]), #signature_data[required]');
+    console.log('Required fields on page:', debugFields.length);
+    debugFields.forEach(field => {
+        // Don't call validateField for debug - just check value
+        const hasValue = field.value && field.value.trim() !== '';
+        console.log(`Field ${field.id}: value="${field.value}", readonly=${field.readOnly}, hasValue=${hasValue}`);
+    });
+    
+    // Debug captcha state
+    const recaptcha = currentPageEl.querySelector('.g-recaptcha');
+    const hcaptcha = currentPageEl.querySelector('.h-captcha');
+    if (recaptcha) {
+        try {
+            console.log('reCAPTCHA response:', grecaptcha.getResponse() ? 'completed' : 'not completed');
+        } catch (e) {
+            console.log('reCAPTCHA error:', e.message);
+        }
+    }
+    if (hcaptcha) {
+        try {
+            console.log('hCaptcha response:', hcaptcha.getResponse() ? 'completed' : 'not completed');
+        } catch (e) {
+            console.log('hCaptcha error:', e.message);
+        }
+    }
+    
+    // Don't disable the button, just update visual state
+    nextBtn.classList.toggle('ready', isValid);
+    
+    // Keep button text consistent
+    nextBtn.textContent = 'Next';
+}
+</script>
+</body>
+</html>
